@@ -362,8 +362,8 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
             },
             created(){
                 var self = this;
-                var data ={
-                    "ygbm": "03724"
+                var data = {
+                    "ygbm" : httpKit.urlParams().ygbm
                 };
 
                 httpKit.post("/api/my/lrwc",data,httpKit.type.form).then(res=>{
