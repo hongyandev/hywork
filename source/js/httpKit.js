@@ -200,16 +200,11 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
         return quarterStartMonth;
     }
 
-    var refreshCart = function () {
-        bridge.refreshCart();
-    }
-
     return {
         type,
         get,
         post,
         urlParams,
-        getQuarterStartMonth,
-        refreshCart
+        getQuarterStartMonth
     }
 });
