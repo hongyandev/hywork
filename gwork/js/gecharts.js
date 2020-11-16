@@ -28,7 +28,6 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
                     `,
             data() {
                 return {
-                    gh:httpKit.urlParams().ygbm,
                     myChart: null,
                     myquarter:null,
                     mylrwcz:null,
@@ -475,11 +474,10 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
             },
             created(){
                 var self = this;
-                var data ={
-                    //"ygbm": "02417"
-                    'ygbm':self.gh
+                var data = {
+                    "ygbm" : httpKit.urlParams().ygbm
                 };
-
+                self.$toast.loading({ forbidClick: true, duration: 0});
                 httpKit.post("/api/my/lrwc",data,httpKit.type.form).then(res=>{
                     self.$toast.clear();
                     console.info(res);
