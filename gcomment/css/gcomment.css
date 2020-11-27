@@ -1,0 +1,23 @@
+.comment li{
+    height:45px;
+    line-height:45px;
+}
+.comment .van-rate{
+    vertical-align: text-bottom;
+}
+.myd{
+    padding:0 15px 0;
+}
+.myd .mydtext{
+    font-size:14px;
+    margin-left:15px;
+    vertical-align: top;
+}
+.myd span{
+    font-size: 14px;
+    vertical-align: top;
+    margin-right:15px;
+}
+.comment li .van-cell{
+    border-bottom:1px solid #f7f7f7;
+}

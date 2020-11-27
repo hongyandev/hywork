@@ -1,0 +1,26 @@
+
+.myorder{
+    position: fixed;
+    width: 100%;
+    bottom:0;
+    left:0;
+
+}
+.van-picker-column{
+position:relative;
+z-index:1
+
+}
+
+.van-picker-column:before{
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    content:'';
+}
+.van-picker-column>ul{
+     z-index:-1;
+     position:relative
+ }

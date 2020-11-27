@@ -1,0 +1,49 @@
+.busorder li{
+    position: relative;
+    padding-left: 80px;
+    padding-bottom:20px;
+    border-bottom:1px solid #f7f7f7;
+    margin-bottom:15px;
+}
+.busorder li time{
+    font-size: 24px;
+    position: absolute;
+    left:15px;
+    top:50%;
+    margin-top:-24px;
+}
+.busorder li .orderbtn{
+    position: absolute;
+    top:50%;
+    margin-top:-30px;
+    right:15px;
+}
+.busorder li .ordertext{
+    position: absolute;
+    top: 50%;
+    margin-top: -24px;
+    right: 40px;
+}
+.van_circle{
+    padding-left:15px;
+    overflow: hidden;
+    font-size:14px;
+}
+.van_circle i{
+    width:5px;
+    height:5px;
+    border-radius: 50%;
+    border:1px solid #0fab1f;
+    float: left;
+    margin-top:7px;
+}
+.van_circle span{
+    float: left;
+    margin-left:10px;
+}
+.van_line{
+    margin-left:18px;
+    height:20px;
+    width: 1px;
+    background: #0fab1f;
+}

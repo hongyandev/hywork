@@ -475,10 +475,11 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
             created(){
                 var self = this;
                 var data = {
-                    "ygbm" : httpKit.urlParams().ygbm
+                    "ygbm":'02417',
+                   // "ygbm" : httpKit.urlParams().ygbm
                 };
                 self.$toast.loading({ forbidClick: true, duration: 0});
-                httpKit.post("/api/my/lrwc",data,httpKit.type.form).then(res=>{
+                    httpKit.post("/api/my/lrwc",data,httpKit.type.form).then(res=>{
                     self.$toast.clear();
                     console.info(res);
                     self.lrzdata = res.data;
