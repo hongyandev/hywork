@@ -2,7 +2,7 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
 
     var type = {
         // application/json
-        json: 'application/json',
+        json: 'application/json;charset=UTF-8',
         // application/x-www-form-urlencoded
         form: 'application/x-www-form-urlencoded',
         // multipart/form-data
@@ -10,18 +10,19 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
     }
 
     var instance = axios.create({
-        baseURL: "http://sge.cn:9106" //"http://dev.sge.cn/rest" //"http:172.60.15.201:8080" //"http://dev.sge.cn/rest"       //"http://172.60.15.201:9666" //"http://172.30.8.90:9666"
+        baseURL: "http://dev.sge.cn/rest" //"http://dev.sge.cn/rest" //"http:172.60.15.201:8080" //"http://dev.sge.cn/rest"       //"http://172.60.15.201:9666" //"http://172.30.8.90:9666"
     });
 
 
     instance.interceptors.request.use(config=>{
-       /* var getToken = new Promise(function (resolve, reject) {
+        var getToken = new Promise(function (resolve, reject) {
             bridge.getToken(token => {
                 config.headers.Authorization = token;
                 resolve(config);
             });
         });
-        return getToken;*/
+        return getToken;
+
        return config
 /*        if (token) {
             config.headers.Authorization = token;
