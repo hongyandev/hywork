@@ -1,0 +1,101 @@
+.textarea .van-field__control--custom{
+    display: block;
+}
+.uploadimg{
+    margin:8px 0 0 15px;
+}
+.popupbtn{
+    position: absolute;
+    bottom:0;
+    width: 100%;
+    left:0;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: flex;
+    justify-content: space-between;
+}
+.orderContent{
+    padding-bottom:50px;
+}
+.orderContent li{
+    border-bottom: 5px solid #f7f7f7;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: flex;
+    justify-content: space-between;
+    padding-right:10px
+}
+.orderitem{
+    width:95%
+}
+.orderitem p{
+    display: -webkit-flex;
+    display: -moz-box;
+    padding:0 15px;
+    justify-content: space-between;
+    margin:0;
+    line-height:30px;
+}
+.orderitem p{
+    color:#999;
+    font-size:12px;
+}
+.orderitem span{
+    font-size:12px;
+    color:#333
+}
+.orderitem div{
+    margin:0;
+    padding:10px 15px;
+    border-top: 1px solid #f7f7f7;
+
+}
+.font-red{
+    color:#f74022!important;
+}
+.orderbtn{
+    width: 100%;
+    height:45px;
+    position: fixed;
+    bottom:0;
+    left:0;
+    display: -webkit-flex;
+    display: -moz-box;
+    /*padding:0 15px;*/
+    justify-content: space-between;
+    background-color: #fff;
+}
+.orderbtn button{
+    width: 50%;
+}
+.van-search{
+    padding:10px 5px;
+}
+.popupTop{
+    display: -webkit-flex;
+    display: -moz-box;
+    padding-right: 5px;
+    justify-content: space-between;
+}
+.searchbtn{
+    margin-top:12px;
+}
+.datecell{
+    width: 75%;
+    line-height: 35px;
+    padding:10px 5px;
+    font-size:12px;
+}
+.datecell.van-cell:not(:last-child)::after{
+    border:0;
+}
+.datecell .van-cell__value--alone{
+    background-color: #f7f8fa;
+    text-align: center;
+}
+.cptag{
+    margin-right: 5px;
+}
+.van-swipe__indicator--active{
+    background-color: #07c160;
+}

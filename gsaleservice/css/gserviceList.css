@@ -1,0 +1,283 @@
+.itemCard {
+    border-radius: 20px;
+    margin: 5px;
+    overflow: hidden;
+}
+.money {
+    font-weight: bold;
+    color: red;
+}
+.midtext {
+    text-align: center;
+}
+.diy{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+.font-red{
+    color:#f74022;
+}
+.van-submit-bar{
+    bottom:0;
+    border-top:1px solid #f7f7f7;
+}
+.shopContent{
+    padding-bottom:90px;
+}
+li .van-checkbox__icon--checked .van-icon{
+    background:#f74022 !important;
+}
+.coupon-radio{
+    margin-right:15px;
+}
+.van-radio__icon--checked .van-icon{
+    background-color: #f74022;
+    border:#f74022;
+}
+li {
+    background: #ffffff;
+    margin-bottom: 10px;
+    position: relative;
+}
+li .shops {
+    display: -webkit-box;
+    width:100%;
+    padding:10px 0;
+}
+.cyName{
+    padding:10px 15px;
+    border-bottom:1px solid #f7f7f7;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+}
+.cyName h3{
+    font-size:14px;
+    /*font-weight: normal;*/
+    margin:0 15px;
+}
+
+.itemlist{
+    border-bottom:1px solid #f7f7f7;
+}
+.van-cell{
+   /* padding: 0;
+    line-height: 26px*/
+}
+.van-card{
+    background-color: #fff;
+}
+/*.van-field__control{
+    height: 26px;
+}*/
+.van-coupon{
+    margin-top:10px;
+}
+.couponBtn{
+    position: fixed;
+    width:98%;
+    bottom:0;
+    padding:0 1%;
+    height:55px;
+    background: #fff;
+    border:1px solid #f7f7f7;
+}
+.couponList li{
+    border-bottom:1px solid #f7f7f7;
+}
+.totalitem{
+    padding:5px 15px;
+    text-align: right;
+    /*border-bottom:5px solid #f7f7f7;*/
+}
+/* 浮层布局 */
+.van-kyje{
+    position:absolute;
+    top:50%;
+    margin-top:-10px;
+    right:0;
+    padding-right:30px;
+}
+.van_radio{
+    position:absolute;
+    top:50%;
+    margin-top:-10px;
+    right:15px;
+    margin-left:15px;
+}
+.yhitem p{
+    margin:0;
+    text-align: right;
+    padding:5px 15px;
+}
+/*地址*/
+.van-address-list__bottom{
+    display: none;
+}
+.van-address-item__value{
+    padding-right:0;
+}
+.van-address-item__edit{
+    display: none;
+}
+.van-address-list{
+    padding:12px;
+}
+
+.addressinfo{
+    position: relative;
+    padding:15px 30px 15px 50px;
+    background: #fff;
+}
+.addressinfo .location-o{
+    position: absolute;
+    left:15px;
+    top:50%;
+    margin-top:-10px;
+}
+.addressinfo .arrow{
+    position: absolute;
+    right:15px;
+    top:50%;
+    margin-top:-10px;
+}
+.addressinfo .plus{
+    font-size:50px;
+}
+.addressinfo p{
+    margin:0;
+    line-height:25px;
+}
+.addressbg{
+    height:2px;
+    background: -webkit-repeating-linear-gradient(-45deg,#ff6c6c 0,#ff6c6c 20%,transparent 0,transparent 25%,#1989fa 0,#1989fa 45%,transparent 0,transparent 50%);
+    background: repeating-linear-gradient(-45deg,#ff6c6c 0,#ff6c6c 20%,transparent 0,transparent 25%,#1989fa 0,#1989fa 45%,transparent 0,transparent 50%);
+    background-size: 80px;
+}
+.popupbtn{
+    position: absolute;
+    bottom:0;
+    width: 100%;
+    left:0;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: flex;
+    justify-content: space-between;
+}
+/**/
+.empty{
+    margin-top:80px;
+    text-align: center;
+}
+.empty .success{
+    font-size:120px;
+}
+.btnCenter{
+    margin-top: 20px;
+    text-align: center;
+}
+/*order*/
+.orderContent ul li{
+    border-bottom: 5px solid #f7f7f7;
+}
+.cyName{
+    display: -webkit-flex;
+    display: -moz-box;
+    justify-content: space-between;
+    padding:15px;
+}
+.cyTop{
+
+    padding:5px 15px;
+    border-top:1px solid #f7f7f7;
+
+}
+.cyTop h3{font-weight: normal;}
+.cyTop span{
+    margin-top:20px;
+}
+.ordertop p{
+    display: -webkit-flex;
+    display: -moz-box;
+    justify-content: space-between;
+    font-size: 15px;
+}
+.orderitem p{
+    margin:0;
+    padding:10px 15px;
+    border-top: 1px solid #f7f7f7;
+
+}
+.orderinfo{
+    margin:0;
+    border-bottom:1px solid #f7f7f7;
+}
+.orderinfo:last-child{
+    border-bottom: none;
+}
+.orderinfo p{
+    color:#999;
+    font-size:12px;
+}
+.orderinfo span{
+    font-size:12px;
+    color:#333
+}
+.orderinfo div{
+    margin:0;
+    padding:10px 15px;
+
+}
+.salecell{
+    font-size:14px;
+    padding:0 15px;
+    background-color: #fff;
+}
+.salecell p{
+    padding: 10px;
+    margin:0;
+    border-bottom: 1px solid #f7f7f7;
+}
+.salecell p:last-child{
+    border-bottom:none
+}
+.salecell label{
+    color:#999;
+}
+.salemx li{
+    margin:0
+}
+.salemx li .van-cell__title{
+    font-size:12px;
+    color:#999
+}
+.salemx li .van-collapse-item__content{
+    padding:0
+}
+.salestatus{
+    background-color: #fff;
+    text-align: right;
+    padding:15px;
+    border-top:1px solid #f7f7f7
+}
+.lcstatus{
+    padding:15px 20px;
+}
+/*评价*/
+.myd{
+    padding:0 0 0 15px;
+}
+.myd .mydtext{
+    font-size:12px;
+    margin-left:15px;
+    vertical-align: top;
+}
+.myd span{
+    font-size: 14px;
+    vertical-align: top;
+    margin-right:15px;
+}
+.comment li .van-cell{
+    border-bottom:1px solid #f7f7f7;
+}
