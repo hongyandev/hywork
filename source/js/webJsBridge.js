@@ -117,7 +117,7 @@ wbjsBridge.method.returnBack = function () {
  * @param funcCallback
  */
 wbjsBridge.method.getToken = function (funcCallback) {
-   // funcCallback("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1MTI1IiwiZXhwIjoxNjA3MDYxNjkwLCJ1c2VySWQiOjUxMjUsImlhdCI6MTYwNjQ1Njg5MCwiYWNjb3VudCI6IjAwMDAwMDAwLDExNzUzIiwidXNlcktleSI6Inh4eHgifQ.fbJz2kSDApABsNfgDZ1A1HK8wGXWYuox7V9SsxMC5muDjbRhTtlvYjrLWV3urHAJeucpZUMbYvV0LAv8dBDtGw");
+   // funcCallback("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDY0MDciLCJleHAiOjE2MDcyNDUzODIsInVzZXJJZCI6MTA2NDA3LCJpYXQiOjE2MDY2NDA1ODIsImFjY291bnQiOiIwMDAwMDAwMCwwNjQwNyIsInVzZXJLZXkiOiJ4eHh4In0.TZwTIuumn-8mER3lcfOM0335V1VuiUMm8d-rT8xwzI_BfwwTc_lLD8MpgfirKhJ9O3v5NKSuzgXzgFoCYQox_w");
     wbjsBridge.method.bridge.callHandler("getToken", {}, function (response) {
         console.info("getToken got response: ", response);
 

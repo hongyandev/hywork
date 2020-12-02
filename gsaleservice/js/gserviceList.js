@@ -73,7 +73,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                 active:['1'],
                 jdstatus:1,
                 page:1,
-                limit:10,
+                limit:5,
                 sum:0,
                 count:0,
                 value:'',
