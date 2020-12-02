@@ -22,7 +22,7 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
                               </template>
                           </van-field>
                           <van-field readonly clickable  name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
-                          <van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择"  @click="showbm"/>
+                          <van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择"  @click="showspr"/>
                           <div style="margin: 16px;">
                             <van-button round block type="primary" native-type="submit">
                               提交
@@ -81,6 +81,12 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
                     this.showbmPicker = true;
 
                 },
+                showspr(){
+                    if(!this.createrBmbm.id){
+                        this.$toast('请选择部门');
+                        return false;
+                    }
+                },
                 onbmConfirm(item){
                     var self = this;
                     self.showbmPicker = false;
@@ -108,6 +114,14 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
                 },
                 onSubmit(){
                     var self = this;
+                    if(!self.checkboxGroup.toString()){
+                        this.$toast('请选择用餐类别');
+                        return false;
+                    }
+                    if(!self.createrBmbm.ysbm){
+                        this.$toast('请选择部门');
+                        return false;
+                    }
                     var data = {
                         'reserveType':httpKit.urlParams().type,
                         'creater':self.initData.ygxx.ygxm,
