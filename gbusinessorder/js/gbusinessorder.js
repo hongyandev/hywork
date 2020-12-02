@@ -3,29 +3,16 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
         el: '#gviporder',
         template: `<div>
                         <van-divider :style="{ borderColor: '#fff', padding: '0 16px' }"></van-divider>
-                        <van-field v-model="creater" label="订餐人" placeholder="" />
-                        <van-field v-model="tel" label="订餐人电话" placeholder="" />
+                        <van-field readonly v-model="creater" label="订餐人" placeholder="" />
+                        <van-field readonly v-model="tel" label="订餐人电话" placeholder="" />
                         <van-form @submit="onSubmit">
-                          <van-field
-                            readonly
-                            v-model="ydtime"
-                            name="用餐时间"
-                            label="用餐时间"
-                            @click="showtime = true"
-                          />
-                          <van-field v-model="number" label="用餐人数" placeholder="请输入用餐人数" />
-                          <van-field readonly  type="number" name="cb" label="用餐标准"  :value="reservePrice.text" placeholder="请选择"  @click="showcb"/>
-                          <van-field readonly  type="number" name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
+                          <van-field  readonly v-model="ydtime" name="用餐时间" label="用餐时间" @click="showtime = true"/>
+                          <van-field required v-model="number" label="用餐人数" placeholder="请输入用餐人数" />
+                          <van-field required readonly  type="number" name="cb" label="用餐标准"  :value="reservePrice.text" placeholder="请选择"  @click="showcb"/>
+                          <van-field required readonly  type="number" name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
                           <!--<van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" />-->
                           <van-field v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
-                          <van-field
-                              v-model="message"
-                              rows="3"
-                              autosize
-                              label="备注"
-                              type="textarea"
-                              placeholder="可填写忌口，口味等需求"
-                            />
+                          <van-field v-model="message" rows="3" autosize label="备注" type="textarea" placeholder="可填写忌口，口味等需求"/>
                           <div style="margin: 16px;">
                             <van-button color="#07c160" round block type="primary" native-type="submit">
                               提交
@@ -174,6 +161,14 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
                 },
                 onSubmit(){
                     var self = this;
+                    if(!self.number){
+                        this.$toast('请填写用餐人数');
+                        return false;
+                    }
+                    if(!self.createrBmbm.ysbm){
+                        this.$toast('请选择部门');
+                        return false;
+                    }
                     var data = {
                         'reserveType':httpKit.urlParams().type,
                         'creater':self.creater,
