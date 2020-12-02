@@ -7,11 +7,11 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
                         <van-field v-model="tel" label="订餐人电话" placeholder="" />
                         <van-form @submit="onSubmit">
                           <van-field readonly v-model="ydtime" name="用餐时间" label="用餐时间" placeholder="用餐时间" :rules="[{ required: true, message: '请选择用餐时间' }]" @click="showtime = true"/>
-                          <van-field v-model="number" type="number" label="用餐人数" placeholder="请输入用餐人数" />
-                          <van-field label="用餐标准" v-model="reservePrice" type="number" placeholder="请填写餐标：比如15元/人"/>
-                          <van-field readonly clickable name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
+                          <van-field required v-model="number" type="number" label="用餐人数" placeholder="请输入用餐人数" />
+                          <van-field required label="用餐标准" v-model="reservePrice" type="number" placeholder="请填写餐标：比如15元/人"/>
+                          <van-field required readonly clickable name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
                           <!--<van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" />-->
-                          <van-field v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
+                          <van-field required v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
                           <van-field
                               v-model="message"
                               rows="3"
@@ -158,6 +158,23 @@ require(['httpKit','echarts'], function (httpKit,echarts) {
             },
             onSubmit(){
                 var self = this;
+
+                if(!self.number){
+                    this.$toast('请填写用餐人数');
+                    return false;
+                }
+                if(!self.reservePrice){
+                    this.$toast('请选择用餐标准');
+                    return false;
+                }
+                if(!self.createrBmbm.ysbm){
+                    this.$toast('请选择部门');
+                    return false;
+                }
+                if(!self.onAccount.id){
+                    this.$toast('请选择是否挂账');
+                    return false;
+                }
                 var data = {
                     'reserveType':httpKit.urlParams().type,
                     'creater':self.creater,
