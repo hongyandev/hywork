@@ -3,20 +3,30 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
         el: '#gsaleservice',
         template: `<div>
                         <van-cell-group>
-                          <van-field v-model="shdata.khdm" :error-message="valKhdm" required label="客户代码" placeholder="请输入客户代码" @input="changeKhdm" />
-                          <van-field readonly label="客户名称" placeholder="客户名称" />
+                          <van-field readonly label="业务员" :value="ywy.ygxm" />
+                        
+                          <!--客户信息-->
+                          <van-field :readonly="line" v-model="shdata.khdm" :error-message="valKhdm" required label="客户代码" placeholder="请输入客户代码" @input="changeKhdm" @blur="getBpc" />
+                          <van-field :value="shdata.khmc" readonly label="客户名称" placeholder="客户名称" />
                           <van-field v-model="shdata.khlxr" label="客户联系人" placeholder="请输入" />
                           <van-field v-model="shdata.khtel" label="客户电话" placeholder="请输入" />
+                          
+                          <!--产业-->
                           <van-field readonly clickable label="所属产业" :value="shdata.sscy.text" placeholder="请输入" @click="showcy" />
-                            <van-popup v-model="showcyPicker" round position="bottom">
-                              <van-picker show-toolbar :columns="cycolumns" @cancel="showcyPicker = false" @confirm="onConfirmcy"/>
-                            </van-popup>
+                          <van-popup v-model="showcyPicker" round position="bottom">
+                             <van-picker show-toolbar :columns="cycolumns" @cancel="showcyPicker = false" @confirm="onConfirmcy"/>
+                          </van-popup>
+                          
+                          <!--反馈类型-->
                           <van-field readonly clickable label="反馈类型" :value="shdata.fklx.text" placeholder="请输入" @click="showfk" />
-                          <!-- 反馈类型 -->
-                            <van-popup v-model="showfkPicker" round position="bottom">
-                              <van-picker show-toolbar :columns="fkcolumns" @cancel="showfkPicker = false" @confirm="onConfirmfk"/>
-                            </van-popup>  
+                          <van-popup v-model="showfkPicker" round position="bottom">
+                            <van-picker show-toolbar :columns="fkcolumns" @cancel="showfkPicker = false" @confirm="onConfirmfk"/>
+                          </van-popup>
+                          
+                          <!--问题描述-->
                           <van-field v-model="shdata.blqkms" rows="1" autosize label="问题描述" type="textarea" placeholder="请输入"/>
+                          
+                          <!--产品明细-->
                           <van-field class="textarea" readonly clickable autosize type="textarea"  :val="shdata.cyInfo.cpdm" label="不良品信息" >
                                <template #input>
                                     <van-tag class="cptag" v-for="(cy,index) in shdata.cyInfo" closeable size="medium" @click="open(index,cy)"  @close="close(index,cy)">{{cy.cpdm}}</van-tag>
@@ -25,14 +35,21 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                                 <van-button size="small" type="primary" @click="addcyInfo">新增</van-button>
                                </template>
                           </van-field>
-                            <div>
-                                <div style="margin:10px 0 0 15px;line-height:24px;font-size:14px;color:#323232">图片上传</div>
-                                <van-uploader class="uploadimg" v-model="fileList" :before-read="beforeRead" :after-read="onRead" accept="image/*"></van-uploader>
-                            </div>
-                            <div style="margin:16px;">
-                                <van-button round block type="primary" @click="submit">提交</van-button>
-                            </div>
-                          </van-cell-group>
+                          
+                          <!--图片上传-->
+                          <div>
+                             <div style="margin:10px 0 0 15px;line-height:24px;font-size:14px;color:#323232">图片上传</div>
+                             <van-uploader class="uploadimg" v-model="fileList" :before-read="beforeRead" :after-read="onRead" accept="image/*"></van-uploader>
+                          </div>
+                          
+                          <!--操作按钮-->
+                          <div style="margin:16px;">
+                             <van-button round block type="primary" @click="submit">提交</van-button>
+                          </div>
+                          
+                        </van-cell-group>
+                        
+                         <!--展示产品明细-->
                           <van-popup closeable close-icon-position="top-right" v-model="showcyInfo" position="bottom" @close="closecyInfo" :style="{ height: '100%' }" >
                                 <van-form style="margin-top:50px;border-top:1px solid #f7f7f7">
                                     <!--<div style="padding:10px;">
@@ -51,10 +68,12 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                                     </van-swipe-item>
                                     </van-swipe>
                                     <div v-if="orders.length>0" style="margin: 16px;">
-                                        <van-button round block type="primary" @click="cysubmit">提交</van-button>
+                                        <van-button round block type="primary" @click="detailsubmit">提交</van-button>
                                     </div>
                                 </van-form>
                             </van-popup>
+                            
+                            
                             <!-- 查询x3订单 -->
                             <van-popup v-model="showorderPicker" position="top"  :style="{ height: '100%'}">
                                 <van-sticky>
@@ -79,6 +98,8 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                                 <van-button type="primary" @click="confirmorders">确定</van-button>
                                </div>
                             </van-popup>
+                            
+                            
                             <!-- 不良反馈 -->
                             <van-popup v-model="showbadPicker" round position="bottom">
                               <van-picker show-toolbar :columns="baddesccolumns" @cancel="showbadPicker = false" @confirm="onbaddescConfirm"/>
@@ -94,8 +115,9 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                     `,
         data() {
             return {
+                line: false,
                 valKhdm: '必填',
-                type:1,
+                type:0, // 0:员工,1:客户
                 current:0,
                 value:"",
                 sum:0,
@@ -172,12 +194,35 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
             };
         },
         methods: {
-            changeKhdm: function (value) {
+            changeKhdm: function (value) { // 控制客户必填
                 var self = this;
                 if (value.length > 0)
                     self.valKhdm = ''
                 else
                     self.valKhdm = '必填'
+            },
+            getBpc: function (e) { // 获取客户信息
+                var data = {"khdm": e.target.value};
+                var self = this;
+                self.$toast.loading({ forbidClick: true, duration: 0});
+                httpKit.post("/afterSale/getBpc", data, httpKit.type.form).then(res=>{
+                    self.$toast.clear();
+                    if (res.data) {
+                        self.shdata.khmc = res.data.khmc;
+                        self.shdata.khlxr = res.data.lxr;
+                        self.shdata.khtel = res.data.lxdh;
+                    } else {
+                        self.$toast.fail('不存在此客户');
+                        self.shdata.khmc = '';
+                        self.shdata.khlxr = '';
+                        self.shdata.khtel = '';
+                    }
+                }).catch(err => {
+                    self.$toast.clear();
+                    self.$toast.fail({
+                        message: err.message
+                    });
+                });
             },
             formatDate(date) {
                 return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -215,7 +260,12 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
             showfk(){
                 this.showfkPicker = true
             },
-            addcyInfo() {//新增产业
+            addcyInfo() {//新增产品明细
+                var self = this;
+                if (!self.shdata.khmc) {
+                    self.$toast.fail('请填写客户');
+                    return;
+                }
                 this.showcyInfo = true;
                 this.arrflag = true;
                 if(this.arrflag){
@@ -235,6 +285,7 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                 var self = this;
                 self.showorderPicker = true;
                 var orderdata = {
+                    "bpcord": self.shdata.khdm,
                     "begin_orddat":self.strDate,
                     "end_orddat":self.endDate,
                     "cyfcy":self.shdata.sscy.id,
@@ -242,9 +293,9 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                     "limit":self.limit,
                     "page":self.page
                 };
-                this.$toast.loading({ forbidClick: true, duration: 0});
+                self.$toast.loading({ forbidClick: true, duration: 0});
                 httpKit.post("/afterSale/query-x3-order-line",orderdata, httpKit.type.form).then(res=>{
-                    this.$toast.clear();
+                    self.$toast.clear();
                     self.orderList = res.data;
                     /*self.sum = res.count;
                     self.count = _.ceil(res.count / self.limit);
@@ -264,9 +315,6 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                         message: err.message
                     });
                 });
-
-
-
             },
             searchorder(){
                 this.showorder();
@@ -291,6 +339,11 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                         orderarr.push(item);
                     }
                 });
+                if (orderarr.length < 1) {
+                    this.showcyInfo = false;
+                    this.arrflag = false;
+                    return;
+                }
                 this.showcyInfo = true;
                 this.orders = this.orders.concat(orderarr);
                 this.orders = this.orders.map(item => {
@@ -352,7 +405,6 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                 this.selectedItem.text = value.text;
                 this.showbadPicker = false;
                 this.baddesc = value;
-
             },
             blsl(val) {
                 if(val.blsl > _.subtract(val.htsl, val.ddyths)){
@@ -361,7 +413,7 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                     return false
                 }
             },
-            cysubmit(){//提交产业订单不良订单信息
+            detailsubmit(){//提交产业订单不良订单信息
                 var r = true;
                 this.orders.forEach(item=>{
                     if(!parseFloat(item.blsl) || item.blsl == undefined){
@@ -388,6 +440,10 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                 });
                 this.shdata.cyInfo = this.orders = this.badorder;
                 this.showcyInfo = false;
+                if (this.badorder.length > 0)
+                    this.line = true
+                else
+                    this.line = false
             },
             open(index,cy) {
                 this.showcyInfo = true;
@@ -488,14 +544,22 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
             },
             submit(){
                 var self = this;
+                if (!self.shdata.khmc){
+                    self.$toast.fail('请填写正确的客户信息');
+                    return;
+                }
+                if (self.badorder.length < 1) {
+                    self.$toash.fail('请新增不良品明细');
+                    return;
+                }
                 self.fileList = self.imgBase64.map(item =>{
                     return item.content
                 });
                 var data = {
                     cy:self.shdata.sscy.id,
                     sdrylx:self.type,
-                    oaid:self.ywy.id,//oaid 5125
-                    ygxm:self.ywy.text,
+                    oaid:self.ywy.oaid,//oaid 5125
+                    ygxm:self.ywy.ygxm,
                     ywy:self.ywy.ywy,
                     oadepid:self.ywy.oadepid,//oadepid 6882
                     tel:self.ywy.tel,//tel
@@ -516,8 +580,7 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                         title: '提交成功',
                     }).then(() => {
                         // on close
-                        window.location.href = "../gserviceList/gserviceList.html";
-                       // window.location.href = "../ghome/ghome.html"
+                        window.location.href = "../gsaleservice/gserviceList.html";
                     });
                 }).catch(err => {
                     self.$toast.clear();
@@ -525,9 +588,20 @@ require(['httpKit','PullUpDown','lodash'], function (httpKit,PullUpDown,_) {
                         message: err.message
                     });
                 });
-
-
             }
+        },
+        created: function () {
+            var self = this;
+            self.$toast.loading({ forbidClick: true, duration: 0});
+            httpKit.post("/afterSale/initYwy").then(res=>{
+                self.$toast.clear();
+                self.ywy = res.data;
+            }).catch(err=>{
+                self.$toast.clear();
+                self.$toast.fail({
+                    message: err.message
+                });
+            });
         },
         mounted(){
             var self = this;
