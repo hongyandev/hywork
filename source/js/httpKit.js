@@ -45,8 +45,11 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
         if (error.response.status) {
             switch (error.response.status) {
                 case 401: { // 账号密码错误，账号被冻结，token过期等
-                    bridge.goLogin();
-                    break;
+                    return new Promise(function (resolve, reject) {
+                        bridge.goLogin(function () {
+                            reject(error.response);
+                        });
+                    });
                 }
             }
         }
