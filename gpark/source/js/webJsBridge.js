@@ -136,13 +136,9 @@ wbjsBridge.method.scanQRCode = function (funCallback) {
 /**
  * 跳转 login 页面
  */
-wbjsBridge.method.goLogin = function (funcCallback) {
+wbjsBridge.method.goLogin = function () {
     wbjsBridge.method.bridge.callHandler("goLogin", {}, function (response) {
         console.log("token expire: ", response);
-
-        if (typeof funcCallback == "function") {
-           funcCallback(response);
-        }
     });
 }
 
