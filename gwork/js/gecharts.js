@@ -1,4 +1,4 @@
-require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
+require(['httpKits','echarts','westeros'], function (httpKits,echarts,westeros) {
     new Vue({
         el: '#gecharts',
         template: `<div>
@@ -56,7 +56,7 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
                         }
                         ],
                     jdobj:{},
-                    quarter:httpKit.getQuarterStartMonth(new Date().getMonth()),
+                    quarter:httpKits.getQuarterStartMonth(new Date().getMonth()),
                     qdkfdata:[]
                 };
             },
@@ -475,11 +475,11 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
             created(){
                 var self = this;
                 var data = {
-                    "ygbm":'02417',
-                   // "ygbm" : httpKit.urlParams().ygbm
+                    //"ygbm":'02417',
+                   "ygbm" : httpKits.urlParams().ygbm
                 };
                 self.$toast.loading({ forbidClick: true, duration: 0});
-                    httpKit.post("/api/my/lrwc",data,httpKit.type.form).then(res=>{
+                    httpKits.post("/api/my/lrwc",data,httpKits.type.form).then(res=>{
                     self.$toast.clear();
                     console.info(res);
                     self.lrzdata = res.data;
@@ -492,7 +492,7 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
                     });
                 });
                 self.$toast.loading({ forbidClick: true, duration: 0});
-                httpKit.post("/api/my/rwwc",data,httpKit.type.form).then(res=>{
+                httpKits.post("/api/my/rwwc",data,httpKits.type.form).then(res=>{
                     //console.info(res)
                     self.$toast.clear();
                     // debugger
@@ -506,7 +506,7 @@ require(['httpKit','echarts','westeros'], function (httpKit,echarts,westeros) {
                     });
                 });
                 self.$toast.loading({ forbidClick: true, duration: 0});
-                httpKit.post("/api/my/qdkf",data,httpKit.type.form).then(res=>{
+                httpKits.post("/api/my/qdkf",data,httpKits.type.form).then(res=>{
                     //console.info(res)
                     self.$toast.clear();
                     // debugger

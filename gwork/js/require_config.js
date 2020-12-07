@@ -8,7 +8,7 @@ define(function () {
             "lodash": "lib/lodash.min",
             "echarts": "lib/plugins/echarts/echarts.min",
             "westeros":"lib/plugins/echarts/westeros",
-            "httpKit": "httpKit",
+            "httpKits": "httpKits",
         }
     });
     require(["bridge"], function() {
