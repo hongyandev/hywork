@@ -24,7 +24,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                                 <template v-else>
                                     <div v-if="item.openOrder=='1'">
                                         <van-button v-show="item.orderStatus=='0'" class="orderbtn" round type="primary" @click="busOrder(item)">立即预约</van-button>
-                                        <van-button v-show="item.orderStatus=='1'" class="orderbtn" round type="primary" @click="cancelbusOrder(item)">取消预约</van-button>
+                                        <van-button v-show="item.orderStatus=='1'" plain hairline class="orderbtn" round type="primary" @click="cancelbusOrder(item)">取消预约</van-button>
                                     </div>
                                     <div v-else>
                                         <span class="ordertext">{{item.tasksStatusDesc}}</span>
