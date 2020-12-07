@@ -223,7 +223,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     });
                     self.reservePrice = self.cbcolumns[0];
                     self.onAccount = self.gzcolumns[0];
-                    self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : ''
+                    self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
+                    if(self.bmcolumns.length == 1){
+                        self.onbmConfirm(self.bmcolumns[0])
+                    }
                     self.creater = self.initData.ygxx.ygxm;
                     self.tel = self.initData.ygxx.tel
                 }).catch(err => {

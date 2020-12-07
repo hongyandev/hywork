@@ -8,7 +8,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         <van-form @submit="onSubmit">
                           <van-field readonly v-model="ydtime" name="用餐时间" label="用餐时间" placeholder="用餐时间" :rules="[{ required: true, message: '请选择用餐时间' }]" @click="showtime = true"/>
                           <van-field required v-model="number" type="number" label="用餐人数" placeholder="请输入用餐人数" />
-                          <van-field required label="用餐标准" v-model="reservePrice" type="number" placeholder="请填写餐标：比如15元/人"/>
+                          <van-field required label="用餐标准" v-model="reservePrice" type="number" placeholder="请填写餐标：比如15"/>
                           <van-field required readonly clickable name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
                           <!--<van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" />-->
                           <van-field required v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
@@ -226,6 +226,9 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 });
                 self.onAccount = self.gzcolumns[0];
                 self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
+                if(self.bmcolumns.length == 1){
+                    self.onbmConfirm(self.bmcolumns[0])
+                }
                 self.creater = self.initData.ygxx.ygxm;
                 self.tel = self.initData.ygxx.tel;
                 self.closeDate = self.initData.closeDate;

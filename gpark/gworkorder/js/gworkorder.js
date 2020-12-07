@@ -167,8 +167,11 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             'ysbm':item.ysbm,
                             'tjgs':item.tjgs
                         }
-                    })
+                    });
                     self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : ''
+                    if(self.bmcolumns.length == 1){
+                       self.onbmConfirm(self.bmcolumns[0])
+                    }
                 }).catch(err => {
                     self.$toast.clear();
                     self.$toast.fail({
