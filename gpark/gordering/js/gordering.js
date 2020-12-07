@@ -36,11 +36,11 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <span style="color:#999;font-size:14px">更多</span>
                           </van-grid-item>
                         </van-grid>
-                        <van-divider :style="{ borderColor: '#fff', padding: '0 5px',color:'#999' }">系统测试中，未正式上线</van-divider>
+                        <van-divider :style="{ borderColor: '#fff', padding: '0 5px',color:'#d87a80' }">系统测试中，未正式上线</van-divider>
                         <!--<p style="color:#999;font-size:14px;text-align: center">系统测试中，未正式上线</p>-->
                         <div class="myorder">
                            <van-grid direction="horizontal" :column-num="1">
-                              <van-grid-item url="../gmyordering/gmyordering.html" icon="orders-o" text="我的预定" />
+                              <van-grid-item url="../gmyordering/gmyordering.html" icon="orders-o" text="我的餐饮预订" />
                             </van-grid>
                         </div>
                    </div>
