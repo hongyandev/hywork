@@ -41,7 +41,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                                     </template>
                               </van-cell>
                               <van-field label="姓名" v-model="username" :value="userInfo.userName" />
-                              <van-field label="手机" v-model="userphone" :value="userInfo.userPhone" />
+                              <van-field label="手机" v-model="userphone" name="validator" :value="userInfo.userPhone"/>
                             </van-cell-group>
                             <div style="margin:16px;">
                                 <van-button round block type="primary" @click="confirmorder">确定预约</van-button>
@@ -102,6 +102,16 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                 },
                 confirmorder(){
                     var self = this;
+                    var reg = 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+                    if (!reg.test(self.userphone)) {
+                        self.$toast("手机号格式不正确");
+                        //self.userphone = '';
+                        return false;
+                    }
+                    if(!self.userphone){
+                        self.$toast("请填写手机号码");
+                        return false;
+                    }
                     self.$toast.loading({ forbidClick: true, duration: 0});
                     var data = {
                         tasksId:self.tasksId,
@@ -139,6 +149,16 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                         });
                     });
                 }
+            },
+            computed: {
+                phoneStyle() {
+                    let reg = /(^1[3|4|5|8][0-9]\d{4,8}$)|(^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$)/
+                    if (!reg.test(this.userphone)) {
+                        this.$toast("联系方式填写有误")
+                        return false
+                    }
+                    return true
+                },
             },
             created(){
                 var self = this;
