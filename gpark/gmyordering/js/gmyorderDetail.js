@@ -17,7 +17,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                                   </template>
                                   <template #default>
                                     <span>{{dataDetail.statusName}}</span>
-                                    <div>取餐码：<span style="color:#333">{{dataDetail.code}}</span></div>
+                                    <div v-show="dataDetail.status=='5'">取餐码：<span style="color:#333">{{dataDetail.code}}</span></div>
                                   </template>
                                   <template #label>
                                         <span v-show="dataDetail.menu">菜单：{{dataDetail.menu}}</span>
