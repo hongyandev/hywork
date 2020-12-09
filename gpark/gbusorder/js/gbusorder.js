@@ -15,7 +15,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                                     <i></i><span>{{item.station.split(',')[0]}}</span>
                                 </div>
                                 <div class="van_line"></div>
-                                 <div class="van_circle">
+                                <div class="van_circle">
                                     <i></i><span>{{item.station.split(',')[1]}}</span>
                                 </div>
                                 <template v-if="item.tasksStatus=='2'">
