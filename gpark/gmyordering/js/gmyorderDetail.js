@@ -19,7 +19,7 @@ require(['httpKit','lodash'], function (httpKit, _) {
                                         <span v-show="dataDetail.menu">菜单：{{dataDetail.menu}}</span>
                                   </template>-->
                             </van-cell>
-                            <van-cell>
+                            <van-cell v-show="dataDetail.menu">
                                 <template #title><div class="menu-title"><span style="font-size: 12px;color:#999;">菜单</span><span>预订合计：￥{{total}}</span></div></template>
                                 <template #label>
                                     <ul>
@@ -30,7 +30,8 @@ require(['httpKit','lodash'], function (httpKit, _) {
                                     </ul>
                                 </template>
                             </van-cell>
-                            <div class="button">
+                            <div v-if="dataDetail.status == '0'"></div>
+                            <div v-else class="button">
                                 <label v-show="dataDetail.actualReservePrice">总金额：￥{{dataDetail.actualReservePrice}}</label>
                                 <van-button v-if="dataDetail.reserveType=='1' || dataDetail.reserveType=='2'" @click="cancelOrder" plain hairline v-show="dataDetail.status=='3' || dataDetail.status=='4'||dataDetail.status=='5'" size="small" type="danger">取消预订</van-button>
                                 <van-button @click="confirmOrder"  plain hairline v-show="dataDetail.status=='4'" size="small" type="primary">确认订单</van-button>
