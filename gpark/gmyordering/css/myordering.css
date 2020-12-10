@@ -26,4 +26,14 @@
     border-bottom:1px solid #f7f7f7;
     overflow: hidden;
 }
+.menu-title{
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    justify-content: space-between;
+}
+.menu-title span{
+    font-size:12px;
+    color:#999
+}
 

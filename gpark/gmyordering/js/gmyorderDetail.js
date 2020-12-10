@@ -1,10 +1,6 @@
-require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backTop) {
+require(['httpKit','lodash'], function (httpKit, _) {
     new Vue({
         el: '#gordering',
-        components: {
-            'pull-up-down':PullUpDown,
-            'back-top':backTop
-        },
         template: `<div class="bg">
                         <div class="detailMenu">
                             <van-cell center >
@@ -19,15 +15,26 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                                     <span>{{dataDetail.statusName}}</span>
                                     <div v-show="dataDetail.status=='5'">取餐码：<span style="color:#333">{{dataDetail.code}}</span></div>
                                   </template>
-                                  <template #label>
+                                  <!--<template #label>
                                         <span v-show="dataDetail.menu">菜单：{{dataDetail.menu}}</span>
-                                  </template>
+                                  </template>-->
+                            </van-cell>
+                            <van-cell>
+                                <template #title><div class="menu-title"><span style="font-size: 12px;color:#999;">菜单</span><span>预订合计：￥{{total}}</span></div></template>
+                                <template #label>
+                                    <ul>
+                                        <li v-for="(val, key) in menus">
+                                            <span>{{key}}</span>：
+                                            <span style="margin-right:10px;" v-for="item in val">{{item.dishesName}}:￥{{item.price}}</span>
+                                        </li>
+                                    </ul>
+                                </template>
                             </van-cell>
                             <div class="button">
                                 <label v-show="dataDetail.actualReservePrice">总金额：￥{{dataDetail.actualReservePrice}}</label>
-                                <van-button @click="cancelOrder" plain hairline v-show="dataDetail.status=='3' || dataDetail.status=='4'||dataDetail.status=='5'" size="small" type="danger">取消预订</van-button>
+                                <van-button v-if="dataDetail.reserveType=='1' || dataDetail.reserveType=='2'" @click="cancelOrder" plain hairline v-show="dataDetail.status=='3' || dataDetail.status=='4'||dataDetail.status=='5'" size="small" type="danger">取消预订</van-button>
                                 <van-button @click="confirmOrder"  plain hairline v-show="dataDetail.status=='4'" size="small" type="primary">确认订单</van-button>
-                                <van-button :url="'../gcomment/gcomment.html?id='+dataDetail.id" plain hairline v-show="dataDetail.status=='6' || dataDetail.status=='9'" size="small" type="primary">评价</van-button>
+                                <van-button :url="'../gpark/gcomment/gcomment.html?id='+dataDetail.id" plain hairline v-show="dataDetail.status=='6' || dataDetail.status=='9'" size="small" type="primary">评价</van-button>
                             </div>         
                         </div>
                        <div class="bgimage">
@@ -37,7 +44,10 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                     `,
             data() {
                 return {
-                    dataDetail:''
+                    dataDetail:'',
+                    menu:[],
+                    menus:{},
+                    total:''
                 };
             },
             methods: {
@@ -47,7 +57,10 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                     httpKit.post("/reserve/canyin/detail",{id:httpKit.urlParams().id}).then(res=>{
                         self.$toast.clear();
                         console.info(res);
-                        self.dataDetail = res.data
+                        self.dataDetail = res.data;
+                        self.menu = self.dataDetail.menu ? eval(self.dataDetail.menu) : [];
+                        self.menus = _.groupBy(self.menu, 'dishesType');
+                        self.total = _.sum(self.menu.map(item=>{return Number(item.amount)}))
                     }).catch(err => {
                         self.$toast.clear();
                         self.$toast.fail({
@@ -65,7 +78,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                             title: '预订成功！',
                         }).then(() => {
                             // on close
-                            window.location.href='../gmyordering.html'
+                            window.location.href='../gpark/gmyordering/gmyordering.html'
                         });
                     }).catch(err => {
                         self.$toast.clear();
@@ -84,7 +97,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                             title: '取消成功',
                         }).then(() => {
                             // on close
-                            window.location.href='../gmyordering.html'
+                            window.location.href='../gpark/gmyordering/gmyordering.html'
                         });
 
                     }).catch(err => {
