@@ -32,6 +32,9 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         <van-popup v-model="showbmPicker" round position="bottom">
                             <van-picker show-toolbar :columns="bmcolumns" @cancel="showbmPicker = false" @confirm="onbmConfirm"/>
                         </van-popup>
+                        <van-popup v-model="showsprPicker" round position="bottom">
+                            <van-picker show-toolbar :columns="createrYsbm" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
+                        </van-popup>
                         <!--<van-popup v-model="showtime" position="bottom">
                                 <van-datetime-picker type="date" v-model="currentDate" :columns-order="['year', 'month', 'day']" :formatter="formatter" title="选择时间" :min-date="mindate"  @confirm="onConfirmdate" @cancel="showdate=false"/>
                         </van-popup>-->
@@ -41,9 +44,11 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 return {
                     initData:{},
                     bmcolumns:[],
+                    sprcolumns:[],
                     createrBmbm:{},
                     night:'',
                     showbmPicker:false,
+                    showsprPicker:false,
                     ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))}`,
                     num:'',
                     yctime:'',
@@ -82,18 +87,20 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
 
                 },
                 showspr(){
-                    if(!this.createrBmbm.id){
+                    if(!this.createrBmbm.ysbm){
                         this.$toast('请选择部门');
                         return false;
                     }
+                    this.showsprPicker = true;
+
                 },
                 onbmConfirm(item){
                     var self = this;
                     self.showbmPicker = false;
                     self.createrBmbm = item;
-                    if(self.createrBmbm.id){
+                    if(self.createrBmbm.ysbm){
                         self.$toast.loading({ forbidClick: true, duration: 0});
-                        httpKit.post("/reserve/getYsbmjl",{createrYsbm:self.createrBmbm.id}).then(res=>{
+                        httpKit.post("/reserve/getYsbmjl",{createrYsbm:self.createrBmbm.ysbm}).then(res=>{
                             self.$toast.clear();
                             console.info(res);
                             self.createrYsbm = res.data;
@@ -103,7 +110,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                                     text:item.ygxm
                                 }
                             });
-                            self.spr = self.createrYsbm.length==1 ? self.createrYsbm[0] : '';
+                            if(self.createrYsbm.length==1){
+                                self.spr = self.createrYsbm[0]
+                            }
+                           // self.spr = self.createrYsbm.length==1 ? self.createrYsbm[0] : '';
                         }).catch(err => {
                             self.$toast.clear();
                             self.$toast.fail({
@@ -111,6 +121,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             });
                         });
                     }
+                },
+                onsprConfirm(item){
+                    this.spr = item;
+                    this.showsprPicker = false
                 },
                 onSubmit(){
                     var self = this;
@@ -140,7 +154,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     httpKit.post("/reserve/canyin/addItem",data,httpKit.type.json).then(res=>{
                         self.$toast.clear();
                         self.$toast("预定成功");
-                        window.location.href='../../gmyordering/gmyordering.html'
+                        window.location.href='../../gpark/gmyordering/gmyordering.html'
                     }).catch(err => {
                         self.$toast.clear();
                         self.$toast.fail({
@@ -168,6 +182,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             'tjgs':item.tjgs
                         }
                     });
+
                     self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : ''
                     if(self.bmcolumns.length == 1){
                        self.onbmConfirm(self.bmcolumns[0])

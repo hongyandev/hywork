@@ -9,7 +9,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                           </van-swipe-item>
                         </van-swipe>
                         <van-divider :style="{ borderColor: '#fff', padding: '0 5px',color:'#999',margin:'5px 0' }"></van-divider>
-                        <van-grid :gutter="15" :column-num="2">
+                        <van-grid  :column-num="3">
                            <van-grid-item clickable  url="../gworkorder/gworkorder.html?type=3">
                             <van-icon name="todo-list-o" size="30" color="#d87a80"/>
                             <span style="color:#d87a80;font-size:14px">加班餐</span>
@@ -22,22 +22,25 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <van-icon name="send-gift-o" size="30" color="#ffb980"/>
                             <span style="color:#ffb980;font-size:14px">商务套餐</span>
                           </van-grid-item>
-                          
                           <van-grid-item clickable url="../gbusorder/gbusorder.html">
                             <van-icon name="logistics" size="30" color="#5ab1ef"/>
                             <span style="color:#5ab1ef;font-size:14px">班车预约</span>
                           </van-grid-item>
+                          <van-grid-item clickable @click="grecord">
+                            <van-icon name="balance-list-o" size="30" color="#d281ff"/>
+                            <span style="color:#d281ff;font-size:14px">餐厅消费记录</span>
+                          </van-grid-item>
                           <van-grid-item clickable>
-                            <van-icon name="send-gift-o" size="30" color="#999"/>
+                            <van-icon name="shop-o" size="30" color="#999"/>
                             <span style="color:#999;font-size:14px">小超市</span>
                           </van-grid-item>
-                          <van-grid-item clickable>
+                          
+                          <!--<van-grid-item clickable>
                             <van-icon name="more-o" size="30" color="#999"/>
                             <span style="color:#999;font-size:14px">更多</span>
-                          </van-grid-item>
+                          </van-grid-item>-->
                         </van-grid>
-                        <van-divider :style="{ borderColor: '#fff', padding: '0 5px',color:'#d87a80' }">系统测试中，未正式上线</van-divider>
-                        <!--<p style="color:#999;font-size:14px;text-align: center">系统测试中，未正式上线</p>-->
+                     
                         <div class="myorder">
                            <van-grid direction="horizontal" :column-num="1">
                               <van-grid-item url="../gmyordering/gmyordering.html" icon="orders-o" text="我的餐饮预订" />
@@ -53,7 +56,9 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 };
             },
             methods: {
-
+                grecord(){
+                    window.location.href = 'http://dev.sge.cn/rest/oapi/stxfjl?access_token='+document.cookie
+                }
             },
             created(){
 
