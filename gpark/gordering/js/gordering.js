@@ -57,7 +57,19 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
             },
             methods: {
                 grecord(){
-                    window.location.href = 'http://dev.sge.cn/rest/oapi/stxfjl?access_token='+document.cookie
+                   // window.location.href = 'http://dev.sge.cn/rest/oapi/stxfjl?access_token='+document.cookie
+
+                    this.$toast.loading({ forbidClick: true, duration: 0});
+                    //return;
+                    httpKit.post("/getToken").then(res=>{
+                        this.$toast.clear();
+                        window.location.href = 'http://dev.sge.cn/rest/oapi/stxfjl?access_token='+res.data
+                    }).catch(err => {
+                        this.$toast.clear();
+                        this.$toast.fail({
+                            message: err.message
+                        });
+                    });
                 }
             },
             created(){
