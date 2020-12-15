@@ -12,6 +12,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                           <van-field required readonly  type="number" name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
                           <!--<van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" />-->
                           <van-field v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
+                           <van-field readonly v-show="initData.onAccount=='0'" label="结算方式" type="number" value="自费"/>
                           <van-field v-model="message" rows="3" autosize label="备注" type="textarea" placeholder="可填写忌口，口味等需求"/>
                           <div style="margin: 16px;">
                             <van-button color="#07c160" round block type="primary" native-type="submit">
@@ -87,11 +88,15 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
             },
             methods: {
                 formatDate(date) {
-                    var hours,
+                    var month,
+                        day,
+                        hours,
                         minutes;
+                    month = `${date.getMonth()}`<10 ? '0' + `${date.getMonth()+1}` : `${date.getMonth() + 1}`;
+                    day = `${date.getDate()}`<10 ? '0' + `${date.getDate()}` : `${date.getDate()}`;
                     hours = `${date.getHours()}`<10 ? '0' + `${date.getHours()}` : `${date.getHours()}`;
                     minutes = `${date.getMinutes()}` < 10 ? '0'+`${date.getMinutes()}`:`${date.getMinutes()}`;
-                    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} `+ hours +`:`+ minutes;
+                    return `${date.getFullYear()}-`+ month + "-" + day+ " "+ hours +`:`+ minutes
                 },
                 formatter(type, val) {
                     if (type === 'year') {
@@ -222,7 +227,6 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         }
                     });
                     self.reservePrice = self.cbcolumns[0];
-                    self.onAccount = self.gzcolumns[0];
                    // self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
                     if(self.bmcolumns.length == 1){
                         self.onbmConfirm(self.bmcolumns[0])
