@@ -35,11 +35,11 @@ require(['httpKit','lodash'], function (httpKit, _) {
                                 <label v-show="dataDetail.actualReservePrice">总金额：￥{{dataDetail.actualReservePrice}}</label>
                                 <van-button v-if="dataDetail.reserveType=='1' || dataDetail.reserveType=='2'" @click="cancelOrder" plain hairline v-show="dataDetail.status=='3' || dataDetail.status=='4'||dataDetail.status=='5'" size="small" type="danger">取消预订</van-button>
                                 <van-button @click="confirmOrder"  plain hairline v-show="dataDetail.status=='4'" size="small" type="primary">确认订单</van-button>
-                                <van-button :url="'../gpark/gcomment/gcomment.html?id='+dataDetail.id" plain hairline v-show="dataDetail.status=='6' || dataDetail.status=='9'" size="small" type="primary">评价</van-button>
+                                <van-button :url="'../../gpark/gcomment/gcomment.html?id='+dataDetail.id" plain hairline v-show="dataDetail.status=='6' || dataDetail.status=='9'" size="small" type="primary">评价</van-button>
                             </div>         
                         </div>
                        <div class="bgimage">
-                            <img src="/gpark/gmyordering/img/jyls.png">
+                            <img src="../gmyordering/img/jyls.png">
                        </div>
                    </div>
                     `,
@@ -79,7 +79,7 @@ require(['httpKit','lodash'], function (httpKit, _) {
                             title: '预订成功！',
                         }).then(() => {
                             // on close
-                            window.location.href='../gpark/gmyordering/gmyordering.html'
+                            window.location.href='../../gpark/gmyordering/gmyordering.html'
                         });
                     }).catch(err => {
                         self.$toast.clear();
@@ -98,7 +98,7 @@ require(['httpKit','lodash'], function (httpKit, _) {
                             title: '取消成功',
                         }).then(() => {
                             // on close
-                            window.location.href='../gpark/gmyordering/gmyordering.html'
+                            window.location.href='../../gpark/gmyordering/gmyordering.html'
                         });
 
                     }).catch(err => {
