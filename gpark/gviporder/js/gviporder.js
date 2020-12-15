@@ -9,9 +9,11 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                           <van-field readonly v-model="ydtime" name="用餐时间" label="用餐时间" placeholder="用餐时间" :rules="[{ required: true, message: '请选择用餐时间' }]" @click="showtime = true"/>
                           <van-field required v-model="number" type="number" label="用餐人数" placeholder="请输入用餐人数" />
                           <van-field required label="用餐标准" v-model="reservePrice" type="number" placeholder="请填写餐标：比如15"/>
+                          
                           <van-field required readonly clickable name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
                           <!--<van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" />-->
                           <van-field required v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
+                          <van-field readonly v-show="initData.onAccount=='0'" label="结算方式" type="number" value="自费"/>
                           <van-field
                               v-model="message"
                               rows="3"
@@ -87,11 +89,15 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
         },
         methods: {
             formatDate(date) {
-                var hours,
+                var month,
+                    day,
+                    hours,
                     minutes;
+                month = `${date.getMonth()}`<10 ? '0' + `${date.getMonth()+1}` : `${date.getMonth() + 1}`;
+                day = `${date.getDate()}`<10 ? '0' + `${date.getDate()}` : `${date.getDate()}`;
                 hours = `${date.getHours()}`<10 ? '0' + `${date.getHours()}` : `${date.getHours()}`;
                 minutes = `${date.getMinutes()}` < 10 ? '0'+`${date.getMinutes()}`:`${date.getMinutes()}`;
-                return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} `+ hours  +`:`+ minutes;
+                return `${date.getFullYear()}-`+ month + "-" + day+ " "+ hours +`:`+ minutes
             },
             formatter(type, val) {
                 if (type === 'year') {
@@ -224,7 +230,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         'tjgs':item.tjgs
                     }
                 });
-                self.onAccount = self.gzcolumns[0];
+               // self.onAccount = self.gzcolumns[0];
                 self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
                 if(self.bmcolumns.length == 1){
                     self.onbmConfirm(self.bmcolumns[0])
