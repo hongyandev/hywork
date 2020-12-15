@@ -13,16 +13,17 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             :rules="[{ required: true, message: '请选择预定时间' }]"
                             @click="showtime = true"
                           />
-                          <van-field name="checkboxGroup" label="用餐类别">
+                          <van-field required name="checkboxGroup" label="用餐类别">
                               <template #input>
                                 <van-checkbox-group v-model="checkboxGroup" direction="horizontal">
-                                  <van-checkbox checked-color="#07c160" v-show="initData.LunchOptions=='1'" name="12:00" shape="square">午餐</van-checkbox>
-                                  <van-checkbox checked-color="#07c160" name="18:00" value="18:00" shape="square">晚餐</van-checkbox>
+                                  <van-checkbox checked-color="#07c160" v-show="initData.LunchOptions=='1'" name="11:00" shape="square">午餐</van-checkbox>
+                                  <van-checkbox checked-color="#07c160" name="17:00" value="17:00" shape="square">晚餐</van-checkbox>
                                 </van-checkbox-group>
                               </template>
                           </van-field>
-                          <van-field readonly clickable  name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
-                          <van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择"  @click="showspr"/>
+                          <van-field required readonly clickable  name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
+                          <van-field required readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择"  @click="showspr"/>
+                          <van-field required v-model="message" rows="3" autosize label="加班理由" type="textarea" placeholder="请填写加班理由"/>
                           <div style="margin: 16px;">
                             <van-button round block type="primary" native-type="submit">
                               提交
@@ -59,6 +60,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     currentDate:new Date(),
                     checkbox: false,
                     checkboxGroup: [],
+                    message:''
                 };
             },
             methods: {
@@ -134,6 +136,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     }
                     if(!self.createrBmbm.ysbm){
                         this.$toast('请选择部门');
+                        return false;
+                    }
+                    if(!self.message){
+                        this.$toast('请填写加班理由');
                         return false;
                     }
                     var data = {
