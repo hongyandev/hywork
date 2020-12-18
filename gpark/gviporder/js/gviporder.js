@@ -11,9 +11,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                           <van-field required label="用餐标准" v-model="reservePrice" type="number" placeholder="请填写餐标：比如15"/>
                           
                           <van-field required readonly clickable name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
-                          <!--<van-field readonly clickable name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" />-->
-                          <van-field required v-show="initData.onAccount=='1'" readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
-                          <van-field readonly v-show="initData.onAccount=='0'" label="结算方式" type="number" value="自费"/>
+                          
+                          <van-field required readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
+                          <van-field required readonly clickable v-show="onAccount.id=='1'" name="spr" label="选择审批人" :value="spr.text" placeholder="请选择"  @click="showspr" />
+                          <!--<van-field readonly v-show="initData.onAccount=='0'" label="结算方式" type="number" value="自费"/>-->
                           <van-field
                               v-model="message"
                               rows="3"
@@ -31,6 +32,9 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         <!--是否挂账-->
                         <van-popup v-model="showgzPicker" round position="bottom">
                             <van-picker show-toolbar :columns="gzcolumns" @cancel="showgzPicker = false" @confirm="ongzConfirm"/>
+                        </van-popup>
+                         <van-popup v-model="showsprPicker" round position="bottom">
+                            <van-picker show-toolbar :columns="createrYsbm" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
                         </van-popup>
                         <!--部门选择-->
                         <van-popup v-model="showbmPicker" round position="bottom">
@@ -58,12 +62,12 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 ],
                 gzcolumns:[
                     {
-                        id:1,
-                        text:'是'
-                    },
-                    {
                         id:0,
                         text:'否'
+                    },
+                    {
+                        id:1,
+                        text:'是'
                     }
                 ],
                 onAccount:{},
@@ -78,6 +82,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 showbmPicker:false,
                 showcbPicker:false,
                 showgzPicker:false,
+                showsprPicker:false,
                 ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+1, new Date().getHours(), new Date().getMinutes()))}`,
                 showtime:false,
                 showyctime:false,
@@ -129,17 +134,29 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
             showgz(){
                 this.showgzPicker = true;
             },
+            showspr(){
+                if(!this.createrBmbm.ysbm){
+                    this.$toast('请选择部门');
+                    return false;
+                }
+                this.showsprPicker = true;
+
+            },
             oncbConfirm(item){//cb
                 this.showcbPicker = false;
                 this.reservePrice = item;
+            },
+            onsprConfirm(item){
+                this.spr = item;
+                this.showsprPicker = false
             },
             onbmConfirm(item){
                 var self = this;
                 self.showbmPicker = false;
                 self.createrBmbm = item;
-                if(self.createrBmbm.id){
+                if(self.createrBmbm.ysbm){
                     self.$toast.loading({ forbidClick: true, duration: 0});
-                    httpKit.post("/reserve/getYsbmjl",{createrYsbm:self.createrBmbm.id}).then(res=>{
+                    httpKit.post("/reserve/getYsbmjl",{createrYsbm:self.createrBmbm.ysbm}).then(res=>{
                         self.$toast.clear();
                         console.info(res);
                         self.createrYsbm = res.data;
@@ -149,7 +166,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                                 text:item.ygxm
                             }
                         });
-                        self.spr = self.createrYsbm.length==1 ? self.createrYsbm[0] : '';
+                        if(self.createrYsbm.length==1){
+                            self.spr = self.createrYsbm[0]
+                        }
+                       // self.spr = self.createrYsbm.length==1 ? self.createrYsbm[0] : '';
                     }).catch(err => {
                         self.$toast.clear();
                         self.$toast.fail({
@@ -177,10 +197,13 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     this.$toast('请选择部门');
                     return false;
                 }
-                if(!self.onAccount.id){
-                    this.$toast('请选择是否挂账');
-                    return false;
+                if(self.onAccount.id){
+                    if(!self.spr.id){
+                        this.$toast('请选择审批人');
+                        return false;
+                    }
                 }
+
                 var data = {
                     'reserveType':httpKit.urlParams().type,
                     'creater':self.creater,
@@ -193,12 +216,11 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     'reserveTime':self.ydtime.split(' ')[1],
                     'reserveDate':self.ydtime.split(' ')[0],
                     'onAccount':self.onAccount.id,
-                   /* 'approver':self.spr.id*/
+                    'approver':self.spr.id,
                     'note':self.message
                 };
-                //debugger
+               // return;
                 self.$toast.loading({ forbidClick: true, duration: 0});
-                //return;
                 httpKit.post("/reserve/canyin/addItem",data,httpKit.type.json).then(res=>{
                     self.$toast.clear();
                     self.$toast("预定成功");
@@ -230,7 +252,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         'tjgs':item.tjgs
                     }
                 });
-               // self.onAccount = self.gzcolumns[0];
+                self.onAccount = self.gzcolumns[0];
                 self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
                 if(self.bmcolumns.length == 1){
                     self.onbmConfirm(self.bmcolumns[0])
