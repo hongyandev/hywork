@@ -138,6 +138,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         this.$toast('请选择部门');
                         return false;
                     }
+                    if(!self.spr.id){
+                        this.$toast('请选择审批人');
+                        return false;
+                    }
                     if(!self.message){
                         this.$toast('请填写加班理由');
                         return false;
@@ -154,9 +158,8 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         'approver':self.spr.id,
                         'note':self.message
                     };
-                    //debugger
-                    self.$toast.loading({ forbidClick: true, duration: 0});
                     //return;
+                    self.$toast.loading({ forbidClick: true, duration: 0});
                     httpKit.post("/reserve/canyin/addItem",data,httpKit.type.json).then(res=>{
                         self.$toast.clear();
                         self.$toast("预定成功");
