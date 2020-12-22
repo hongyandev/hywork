@@ -4,7 +4,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
         el: '#gmenu',
         template: `
                    <div>
-                        <van-tabs class="tab-menu"  color="#009D85">
+                        <van-tabs class="tab-menu"  color="#009D85" v-if="menu.length>0">
                           <van-tab v-for="(item,index) in menu">
                             <template #title>
                                 <span>{{item.menuType}}</span>
@@ -28,6 +28,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                              <div></div>      
                           </van-tab>
                         </van-tabs>
+                        <van-empty v-else description="暂时还没有菜单信息" />
                    </div>
                   `,
             data() {
