@@ -8,12 +8,10 @@ define(function () {
             "lodash": "lib/lodash.min",
             "echarts": "lib/plugins/echarts/echarts.min",
             "httpKit": "httpKit",
-            "PullUpDown": "lib/plugins/PullUpDown",
-            "backTop": "lib/plugins/backTop/backTop",
         }
     });
     require(["bridge"], function() {
-        require(["../../gmyordering/js/gmyorderDetail"])
+        require(["../../gmenu/js/gmenu"])
     })
 
 })
