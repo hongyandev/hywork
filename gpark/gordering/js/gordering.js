@@ -39,7 +39,6 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <van-icon name="shop-o" size="30" color="#999"/>
                             <span style="color:#999;font-size:14px">小超市</span>
                           </van-grid-item>
-                          
                           <!--<van-grid-item clickable>
                             <van-icon name="more-o" size="30" color="#999"/>
                             <span style="color:#999;font-size:14px">更多</span>
