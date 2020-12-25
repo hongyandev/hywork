@@ -33,13 +33,19 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                             </li>
                         </ul>
                         <van-empty v-else description="今天没有班车信息" />
-                        <van-popup v-model="showInfo" position="center" :style="{ height: '40%',width:'90%' }">
+                        <van-popup v-model="showInfo" position="center" :style="{ height: '50%',width:'90%' }">
                             <van-cell-group>
                               <van-cell title="站点信息">
                                     <template #extra>
                                          <span>{{startStation}}</span> - <span>{{endstation}}</span>  
                                     </template>
                               </van-cell>
+                              <van-cell title="预约时间">
+                                    <template #extra>
+                                         <span>{{taskdate.substr(0,16)}}</span>
+                                    </template>
+                              </van-cell>
+                              <!--<van-cell title="预约时间" v-model="taskdate" :label="userInfo.tasksDate" />-->
                               <van-field label="姓名" v-model="username" :value="userInfo.userName" />
                               <van-field label="手机" v-model="userphone" name="validator" :value="userInfo.userPhone"/>
                             </van-cell-group>
@@ -59,7 +65,8 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                     endstation:'',
                     username:'',
                     userphone:'',
-                    tasksId:''
+                    tasksId:'',
+                    taskdate:''
                 };
             },
             methods: {
@@ -69,10 +76,10 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                     self.nowTask = item;
                     self.startStation = item.station.split(',')[0];
                     self.endstation = item.station.split(',')[1];
-                    self.tasksId = item.id
+                    self.tasksId = item.id;
+                    self.taskdate=item.tasksDate
                 },
                 cancelorder(id) {
-
                     httpKit.post("/busOrder/cancelOrder",{tasksId:id}).then(res=>{
                         this.$toast.clear();
                         console.info(res);
@@ -93,11 +100,8 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                     }).then(() => {
                             // on confirm
                            self.cancelorder(item.id);
-
-
                     }).catch(() => {
                             // on cancel
-
                         });
                 },
                 confirmorder(){
