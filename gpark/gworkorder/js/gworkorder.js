@@ -34,7 +34,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <van-picker show-toolbar :columns="bmcolumns" @cancel="showbmPicker = false" @confirm="onbmConfirm"/>
                         </van-popup>
                         <van-popup v-model="showsprPicker" round position="bottom">
-                            <van-picker show-toolbar :columns="createrYsbm" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
+                            <van-picker show-toolbar :columns="sprcolumns" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
                         </van-popup>
                         <!--<van-popup v-model="showtime" position="bottom">
                                 <van-datetime-picker type="date" v-model="currentDate" :columns-order="['year', 'month', 'day']" :formatter="formatter" title="选择时间" :min-date="mindate"  @confirm="onConfirmdate" @cancel="showdate=false"/>
@@ -89,10 +89,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
 
                 },
                 showspr(){
-                    if(!this.createrBmbm.ysbm){
-                        this.$toast('请选择部门');
-                        return false;
-                    }
+
                     this.showsprPicker = true;
 
                 },
@@ -100,29 +97,6 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     var self = this;
                     self.showbmPicker = false;
                     self.createrBmbm = item;
-                    if(self.createrBmbm.ysbm){
-                        self.$toast.loading({ forbidClick: true, duration: 0});
-                        httpKit.post("/reserve/getYsbmjl",{createrYsbm:self.createrBmbm.ysbm}).then(res=>{
-                            self.$toast.clear();
-                            console.info(res);
-                            self.createrYsbm = res.data;
-                            self.createrYsbm = self.createrYsbm.map(item=>{
-                                return {
-                                    id:item.ysbmjl,
-                                    text:item.ygxm
-                                }
-                            });
-                            if(self.createrYsbm.length==1){
-                                self.spr = self.createrYsbm[0]
-                            }
-                           // self.spr = self.createrYsbm.length==1 ? self.createrYsbm[0] : '';
-                        }).catch(err => {
-                            self.$toast.clear();
-                            self.$toast.fail({
-                                message: err.message
-                            });
-                        });
-                    }
                 },
                 onsprConfirm(item){
                     this.spr = item;
@@ -156,7 +130,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         'reserveTime':self.checkboxGroup.toString(),
                         'reserveDate':self.ydtime,
                         'approver':self.spr.id,
-                        'note':self.message
+                        'note2 ':self.message
                     };
                     //return;
                     self.$toast.loading({ forbidClick: true, duration: 0});
@@ -183,7 +157,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     self.$toast.clear();
                     console.info(res);
                     self.initData = res.data;
-                    this.bmcolumns = this.initData.bmList.map(item=>{
+                    self.bmcolumns = self.initData.bmList.map(item=>{
                         return{
                             'id':item.bmbm,
                             'text':item.bmmc,
@@ -191,11 +165,15 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             'tjgs':item.tjgs
                         }
                     });
-
-                    self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : ''
-                    if(self.bmcolumns.length == 1){
-                       self.onbmConfirm(self.bmcolumns[0])
-                    }
+                    self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
+                    self.sprcolumns = self.initData.sprList.map(item=>{
+                        return{
+                            'id':item.ygbm,
+                            'text':item.ygxm,
+                            'mr':item.mr
+                        }
+                    });
+                    self.spr = self.sprcolumns.filter(item=>item.mr=='1').map(item=>{return item})[0];
                 }).catch(err => {
                     self.$toast.clear();
                     self.$toast.fail({
