@@ -14,7 +14,16 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                           
                           <van-field required readonly clickable  name="gz" label="是否挂账" :value="onAccount.text" placeholder="请选择"  @click="showgz"/>
                           <van-field required readonly clickable v-show="onAccount.id=='1'" name="spr" label="选择审批人" :value="spr.text" placeholder="请选择"  @click="showspr" />
-                          <!--<van-field readonly v-show="initData.onAccount=='0'" label="结算方式" type="number" value="自费"/>-->
+                         <van-field
+                              v-show="onAccount.id=='1'"
+                              required
+                              v-model="note"
+                              rows="3"
+                              autosize
+                              label="事由"
+                              type="textarea"
+                              placeholder="填写事由"
+                            />
                           <van-field
                               v-model="message"
                               rows="3"
@@ -34,7 +43,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <van-picker show-toolbar :columns="gzcolumns" @cancel="showgzPicker = false" @confirm="ongzConfirm"/>
                         </van-popup>
                          <van-popup v-model="showsprPicker" round position="bottom">
-                            <van-picker show-toolbar :columns="createrYsbm" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
+                            <van-picker show-toolbar :columns="sprcolumns" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
                         </van-popup>
                         <!--部门选择-->
                         <van-popup v-model="showbmPicker" round position="bottom">
@@ -73,12 +82,13 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 onAccount:{},
                 createrBmbm:{},
                 reservePrice:"",//cb
-                createrYsbm:[],
+                sprcolumns:[],
                 spr:{},
                 creater:'',
                 tel:'',
                 number:'',
                 night:'',
+                note:'',
                 showbmPicker:false,
                 showcbPicker:false,
                 showgzPicker:false,
@@ -135,10 +145,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 this.showgzPicker = true;
             },
             showspr(){
-                if(!this.createrBmbm.ysbm){
-                    this.$toast('请选择部门');
-                    return false;
-                }
+
                 this.showsprPicker = true;
 
             },
@@ -154,29 +161,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 var self = this;
                 self.showbmPicker = false;
                 self.createrBmbm = item;
-                if(self.createrBmbm.ysbm){
-                    self.$toast.loading({ forbidClick: true, duration: 0});
-                    httpKit.post("/reserve/getYsbmjl",{createrYsbm:self.createrBmbm.ysbm}).then(res=>{
-                        self.$toast.clear();
-                        console.info(res);
-                        self.createrYsbm = res.data;
-                        self.createrYsbm = self.createrYsbm.map(item=>{
-                            return {
-                                id:item.ysbmjl,
-                                text:item.ygxm
-                            }
-                        });
-                        if(self.createrYsbm.length==1){
-                            self.spr = self.createrYsbm[0]
-                        }
-                       // self.spr = self.createrYsbm.length==1 ? self.createrYsbm[0] : '';
-                    }).catch(err => {
-                        self.$toast.clear();
-                        self.$toast.fail({
-                            message: err.message
-                        });
-                    });
-                }
+
             },
             ongzConfirm(item){
                 this.showgzPicker = false;
@@ -202,6 +187,11 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                         this.$toast('请选择审批人');
                         return false;
                     }
+                    if(!self.note){
+                        this.$toast('请填写事由');
+                        return false;
+                    }
+
                 }
 
                 var data = {
@@ -217,7 +207,8 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     'reserveDate':self.ydtime.split(' ')[0],
                     'onAccount':self.onAccount.id,
                     'approver':self.spr.id,
-                    'note':self.message
+                    'note':self.message,
+                    'note2':self.note
                 };
                // return;
                 self.$toast.loading({ forbidClick: true, duration: 0});
@@ -236,7 +227,6 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
         created(){
             var self = this;
             var data = {
-                // createrYgbm:'02737',
                 reserveType:httpKit.urlParams().type
             };
             self.$toast.loading({ forbidClick: true, duration: 0});
@@ -254,9 +244,14 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 });
                 self.onAccount = self.gzcolumns[0];
                 self.createrBmbm = self.bmcolumns.length == 1 ? self.bmcolumns[0] : '';
-                if(self.bmcolumns.length == 1){
-                    self.onbmConfirm(self.bmcolumns[0])
-                }
+                self.sprcolumns = self.initData.sprList.map(item=>{
+                    return{
+                        'id':item.ygbm,
+                        'text':item.ygxm,
+                        'mr':item.mr
+                    }
+                });
+                self.spr = self.sprcolumns.filter(item=>item.mr=='1').map(item=>{return item})[0];
                 self.creater = self.initData.ygxx.ygxm;
                 self.tel = self.initData.ygxx.tel;
                 self.closeDate = self.initData.closeDate;
