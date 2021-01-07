@@ -50,7 +50,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                     night:'',
                     showbmPicker:false,
                     showsprPicker:false,
-                    ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))}`,
+                    ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()))}`,
                     num:'',
                     yctime:'',
                     createrYsbm:[],
@@ -65,7 +65,13 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
             },
             methods: {
                 formatDate(date) {
-                    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+                    var month,
+                        day,
+                        hours,
+                        minutes;
+                    month = `${date.getMonth()}`<10 ? '0' + `${date.getMonth()+1}` : `${date.getMonth() + 1}`;
+                    day = `${date.getDate()}`<10 ? '0' + `${date.getDate()}` : `${date.getDate()}`;
+                    return `${date.getFullYear()}-`+ month + "-" + day
                 },
                 formatter(type, val) {
                     if (type === 'year') {
