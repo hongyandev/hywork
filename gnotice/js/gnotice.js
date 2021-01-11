@@ -34,7 +34,8 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                             <div v-if="datalist.length > 0">
                                 <ul class="noticelist">
                                     <li @click="gnoticedetail(item)" v-for="item in datalist">
-                                        <h3 class="title">{{item.title}}</h3>
+                                        <h3 v-if="item.userid==''" class="title_bold">{{item.title}}</h3>
+                                        <h3 v-else class="title">{{item.title}}</h3>
                                         <div class="li-item">
                                         <div v-if="item.imgUrl==''"></div>
                                         <div v-else class="item-l"><img :src="item.imgUrl"></div>

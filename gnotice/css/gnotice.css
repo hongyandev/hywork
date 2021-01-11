@@ -90,6 +90,12 @@
     font-size:15px;
     margin:0;
     padding: 5px 0;
+    font-weight: normal;
+}
+.noticelist li .title_bold{
+    font-size:15px;
+    margin:0;
+    padding: 5px 0;
 }
 .noticelist li time{
     font-size:12px;
@@ -106,6 +112,7 @@
 .noticelist .item-l{
     width: 30%;
     float:left;
+    margin-right:10px;
 }
 .noticelist .item-l img{
     width: 100%;
