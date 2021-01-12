@@ -8,27 +8,27 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
         template: `<div>
                         <van-sticky>
                            <van-search v-model="title"  placeholder="请输入搜索关键词" @click="gsearchNotice"/>
-                       </van-sticky>
-                       <div class="van-top-tab">
-                            <ul>
-                                <li @click="showstatus">{{statusTxt ==''?'全部':statusTxt}}</li>
-                            </ul>
-                           <van-overlay v-show="showstatuspicker" :style="{top:'90px'}" @click="showstatuspicker = false">
-                                <div class="wrapper">
-                                    <div class="wrapper-body" style="height:132px;">
-                                        <van-radio-group v-model="status">
-                                              <van-cell-group>
-                                                <van-cell v-for="(item,i) in statuscolumns" :title="item.text" clickable @click="confirmStatus(item)">
-                                                  <template #right-icon>
-                                                    <van-radio :name="item.id" />
-                                                  </template>
-                                                </van-cell>
-                                              </van-cell-group>
-                                            </van-radio-group>
+                           <div class="van-top-tab">
+                                <ul>
+                                    <li @click="showstatus">{{statusTxt ==''?'全部':statusTxt}}</li>
+                                </ul>
+                            </div>
+                        </van-sticky>
+                        <van-overlay v-show="showstatuspicker" :style="{top:'90px'}" @click="showstatuspicker = false">
+                                    <div class="wrapper">
+                                        <div class="wrapper-body" style="height:132px;">
+                                            <van-radio-group v-model="status">
+                                                  <van-cell-group>
+                                                    <van-cell v-for="(item,i) in statuscolumns" :title="item.text" clickable @click="confirmStatus(item)">
+                                                      <template #right-icon>
+                                                        <van-radio :name="item.id" />
+                                                      </template>
+                                                    </van-cell>
+                                                  </van-cell-group>
+                                                </van-radio-group>
+                                        </div>
                                     </div>
-                                </div>
-                            </van-overlay>
-                        </div>
+                                </van-overlay>
                         <div class="noticeContent">
                             <pull-up-down ref="pull" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="loaddata()">
                             <div v-if="datalist.length > 0">
