@@ -1,0 +1,38 @@
+.clearfix{
+    overflow: hidden;
+    clear: both;
+    zoom: 1;
+}
+.img-item{
+   float: left;
+   width: 50%;
+    margin-right: 10px;
+}
+.text-item{
+    float: left;
+}
+
+.cart-item{
+    position: fixed;
+    bottom:0;
+    width: 100%;
+    left:0;
+    display: -webkit-flex;
+    display: flex;
+    display: -moz-flex;
+    background: #5e6063;
+    justify-content: space-between;
+    height:44px;
+    z-index: 2007;
+}
+.border-radius{
+    border:2px solid #009D85;
+    background: #009D85;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 55px;
+    border-radius: 100%;
+    margin-left: 15px;
+    margin-top:-10px;
+}
