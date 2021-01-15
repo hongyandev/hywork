@@ -8,7 +8,7 @@ define(function () {
             "lodash": "lib/lodash.min",
             "echarts": "lib/plugins/echarts/echarts.min",
             "httpKit": "httpKit",
-            "PullUpDown": "lib/plugins/PullUpDown",
+            "PullUpDown": "lib/plugins/PullUpDownTab",
             "backTop": "lib/plugins/backTop/backTop",
         }
     });

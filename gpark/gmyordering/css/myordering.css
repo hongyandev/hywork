@@ -36,4 +36,16 @@
     font-size:12px;
     color:#999
 }
+.lists-jc .van-cell__title .clearfix{
+    overflow: hidden;
+    clear:both;
+    zoom:1
+}
+.lists-jc .van-cell__title .custom-title{
+    float:left
+}
+.lists-jc .van-cell__title time{
+    float: right;
+    color:#999;
+}
 
