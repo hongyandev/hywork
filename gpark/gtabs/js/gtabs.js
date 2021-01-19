@@ -6,20 +6,20 @@ require(['PullUpDown'],function (PullUpDown) {
         },
         template: `<div>
                        <van-tabs v-model="active">
-                              <van-tab title="标签 1">
-                                <PullUpDown ref="one" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="appendOne">
-                                    <div v-for="o in one" style="height: 60px; border: 1px solid green;">
-                                        {{o}}
-                                     </div>
-                                </PullUpDown>
-                              </van-tab>
-                              <van-tab title="标签 2">
-                                    <PullUpDown ref="two" :pullDown="false" :currentPage="tpage" :count="tcount" :sum="tsum" @nextPage="appendTwo">
-                                        <div v-for="o in two" style="height: 60px; border: 1px solid green;">
-                                            {{o}}
-                                         </div>
-                                    </PullUpDown>
-                              </van-tab>
+                          <van-tab title="标签 1">
+                            <PullUpDown ref="one" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="appendOne">
+                                <div v-for="o in one" style="height: 60px; border: 1px solid green;">
+                                    {{o}}
+                                 </div>
+                            </PullUpDown>
+                          </van-tab>
+                          <van-tab title="标签 2">
+                            <PullUpDown ref="two" :pullDown="false" :currentPage="tpage" :count="tcount" :sum="tsum" @nextPage="appendTwo">
+                                <div v-for="o in two" style="height: 60px; border: 1px solid green;">
+                                    {{o}}
+                                 </div>
+                            </PullUpDown>
+                          </van-tab>
                           <van-tab title="标签 3">内容 3</van-tab>
                           <van-tab title="标签 4">内容 4</van-tab>
                        </van-tabs>
