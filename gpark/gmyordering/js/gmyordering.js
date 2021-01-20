@@ -46,27 +46,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                                          </pull-up-down>
                                     </div>
                                     <van-empty v-else description="没有预订单" />
-                                </div>
-                                
-                                <!--<pull-up-down :zref="tab.name" :ref="tab.name" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="gorderlist(tab.name,tab.title)">
-                                 <div v-show="tab.name=='0'">
-                                    
-                                    <van-empty v-else description="没有预定单" />
-                                 </div>
-                                 <div  v-show="tab.name=='1' || tab.name=='2' || tab.name=='3' ">
-                                     <ul class="mayorder" v-if="orderList.length>0">
-                                        <li v-for="item in orderList">
-                                            <van-cell :url="'../gmyordering/gmyorderDetail.html?id='+item.id" is-link center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
-                                                <template #title>
-                                                    <span class="custom-title">{{item.reserveTypeName}}</span>
-                                                    <span>({{item.number}}人)</span>
-                                              </template>
-                                            </van-cell>
-                                        </li>
-                                    </ul>
-                                    <van-empty v-else description="没有预定单" />
-                                 </div>
-                                </pull-up-down>-->
+                                </div> 
                           </van-tab>
                         </van-tabs>
                         <div>
@@ -112,7 +92,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                     var self = this;
                     self.page = 1;
                     var orderdata = {
-                        "reserveType":'0',
+                        "reserveType":name,
                         "limit":self.limit,
                         "page":self.page
                     };
@@ -156,7 +136,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                     var self = this;
                     self.page++;
                     var orderdata = {
-                        "reserveType":'0',
+                        "reserveType":name,
                         "limit":self.limit,
                         "page":self.page
                     };
