@@ -47,7 +47,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                      
                         <div class="myorder">
                            <van-grid direction="horizontal" :column-num="1">
-                              <van-grid-item url="../gmyordering/gmyordering.html?type=" icon="orders-o" text="我的预订" />
+                              <van-grid-item url="../gmyordering/gmyordering.html?type=jbc" icon="orders-o" text="我的预订" />
                             </van-grid>
                         </div>
                    </div>
