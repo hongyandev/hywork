@@ -23,7 +23,7 @@
     background: #5e6063;
     justify-content: space-between;
     height:44px;
-    z-index: 2007;
+    z-index: 2222;
 }
 .border-radius{
     border:2px solid #009D85;
@@ -36,3 +36,4 @@
     margin-left: 15px;
     margin-top:-10px;
 }
+

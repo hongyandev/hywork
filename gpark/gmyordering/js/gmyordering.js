@@ -6,30 +6,56 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
             'back-top':backTop
         },
         template: `<div>
-                        <van-tabs v-model="active" @click="gorderlist">
+                        <van-tabs sticky v-model="active" color="#009D85" @click="orderlist">
                           <van-tab v-for="tab in tabs" :title="tab.title" :name="tab.name" >
-                                <pull-up-down :zref="tab.name" :ref="tab.name" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="gorderlist(tab.name,tab.title)">
+                                <div v-if="tab.name=='0'">
+                                    <div v-if="dataList.length>0">
+                                        <pull-up-down :ref="tab.name" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="gorderlist(tab.name,tab.title)">
+                                                 <ul class="mayorder">
+                                                    <li v-for="item in dataList">
+                                                         <van-cell class="lists-jc" center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
+                                                            <template #title>
+                                                                <div class="clearfix">
+                                                                    <time>{{item.completedTime}}</time>
+                                                                    <span class="custom-title">总金额：￥<b>{{item.goodsTotal}}</b></span>
+                                                                </div> 
+                                                          </template>
+                                                          <template #label>
+                                                                <div v-html="item.details"></div>
+                                                          </template>
+                                                        </van-cell>
+                                                    </li>
+                                                 </ul>
+                                         </pull-up-down>
+                                    </div>
+                                    <van-empty v-else description="没有预订单" />
+                                </div>
+                                <div v-else>
+                                    <div v-if="orderList.length>0">
+                                        <pull-up-down :ref="tab.name" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="gorderlist(tab.name,tab.title)">
+                                                 <ul class="mayorder">
+                                                   <li v-for="item in orderList">
+                                                        <van-cell :url="'../gmyordering/gmyorderDetail.html?id='+item.id" is-link center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
+                                                            <template #title>
+                                                                <span class="custom-title">{{item.reserveTypeName}}</span>
+                                                                <span>({{item.number}}人)</span>
+                                                          </template>
+                                                        </van-cell>
+                                                    </li>
+                                                 </ul>
+                                         </pull-up-down>
+                                    </div>
+                                    <van-empty v-else description="没有预订单" />
+                                </div>
+                                
+                                <!--<pull-up-down :zref="tab.name" :ref="tab.name" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="gorderlist(tab.name,tab.title)">
                                  <div v-show="tab.name=='0'">
-                                     <ul class="mayorder" v-if="dataList.length>0">
-                                        <li v-for="item in dataList">
-                                             <van-cell class="lists-jc" center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
-                                                <template #title>
-                                                    <div class="clearfix">
-                                                        <span class="custom-title">总金额：￥{{item.goodsTotal}}</span>
-                                                        <time>{{item.completedTime}}</time>
-                                                    </div> 
-                                              </template>
-                                              <template #label>
-                                                    <div v-html="item.details"></div>
-                                              </template>
-                                            </van-cell>
-                                        </li>
-                                    </ul>
+                                    
                                     <van-empty v-else description="没有预定单" />
                                  </div>
                                  <div  v-show="tab.name=='1' || tab.name=='2' || tab.name=='3' ">
-                                     <ul class="mayorder" v-if="dataList.length>0">
-                                        <li v-for="item in dataList">
+                                     <ul class="mayorder" v-if="orderList.length>0">
+                                        <li v-for="item in orderList">
                                             <van-cell :url="'../gmyordering/gmyorderDetail.html?id='+item.id" is-link center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
                                                 <template #title>
                                                     <span class="custom-title">{{item.reserveTypeName}}</span>
@@ -40,41 +66,8 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                                     </ul>
                                     <van-empty v-else description="没有预定单" />
                                  </div>
-                                </pull-up-down>
+                                </pull-up-down>-->
                           </van-tab>
-                          <!--<van-tab title="商务餐" @click="gbussiness">
-                            <pull-up-down ref="pull" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="loadorder()">
-                                <ul class="mayorder" v-if="dataList.length>0">
-                                    <li v-for="item in dataList">
-                                        <van-cell :url="'../gmyordering/gmyorderDetail.html?id='+item.id" is-link center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
-                                            <template #title>
-                                                <span class="custom-title">{{item.reserveTypeName}}</span>
-                                                <span>({{item.number}}人)</span>jing'cai
-                                          </template>
-                                        </van-cell>
-                                    </li>
-                                </ul>
-                                <van-empty v-else description="没有预定单" />
-                                </pull-up-down>
-                          </van-tab>
-                          <van-tab title="包 厢" @click="gviporder">
-                            <pull-up-down ref="pull" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="loadorder()">
-                                <ul class="mayorder" v-if="dataList.length>0">
-                                    <li v-for="item in dataList">
-                                        <van-cell :url="'../gmyordering/gmyorderDetail.html?id='+item.id" is-link center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
-                                            <template #title>
-                                                <span class="custom-title">{{item.reserveTypeName}}</span>
-                                                <span>({{item.number}}人)</span>jing'cai
-                                          </template>
-                                        </van-cell>
-                                    </li>
-                                </ul>
-                                <van-empty v-else description="没有预定单" />
-                             </pull-up-down>
-                          </van-tab>
-                          <van-tab title="净 菜">
-                            
-                          </van-tab>-->
                         </van-tabs>
                         <div>
                         
@@ -83,7 +76,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                     `,
             data() {
                 return {
-                    active:0,
+                    active:"0",
                     tabs:[
                         {
                             name:'3',
@@ -106,23 +99,24 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                             zref:'jc'
                         },
                     ],
-                    page:0,
-                    limit:10,
+                    page:1,
+                    limit:8,
                     sum:0,
                     count:0,
-                    dataList:[]
+                    dataList:[],
+                    orderList:[],
                 };
             },
             methods: {
-                gorderlist(name,title){
-                    console.info(name)
+                orderlist(name,title){
                     var self = this;
+                    self.page = 1;
                     var orderdata = {
                         "reserveType":'0',
                         "limit":self.limit,
                         "page":self.page
                     };
-                    if(name=='0'){
+                    if(name == '0'){
                         self.$toast.loading({ forbidClick: true, duration: 0});
                         httpKit.post("/park/shop/order/dishesOrder/list",orderdata,httpKit.type.form).then(res=>{
                             self.$toast.clear();
@@ -130,16 +124,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                             //self.dataList = res.data;
                             self.sum = res.count;
                             self.count = _.ceil(res.count / self.limit);
-                            if(self.page == '1'){
-                                self.dataList = res.data;
-                            }else{
-                                self.dataList = self.dataList.concat(res.data)
-                            }
-                            if (self.page > 1)
-                                self.$refs[name].closePullDown();
-                            if(self.dataList.length > 0){
-                                self.page++;
-                            }
+                            self.dataList = res.data;
 
                         }).catch(err => {
                             self.$toast.clear();
@@ -155,16 +140,54 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                             //self.dataList = res.data;
                             self.sum = res.count;
                             self.count = _.ceil(res.count / self.limit);
-                            if(self.page == '1'){
-                                self.dataList = res.data;
-                            }else{
-                                self.dataList = self.dataList.concat(res.data)
-                            }
-                            if (self.page > 1)
-                                self.$refs[name].closePullDown();
-                            if(self.dataList.length > 0){
-                                self.page++;
-                            }
+                            //if(self.page == '1'){
+                             self.orderList = res.data;
+
+                        }).catch(err => {
+                            self.$toast.clear();
+                            self.$toast.fail({
+                                message: err.message
+                            });
+                        });
+                    }
+                },
+                gorderlist(name,title){
+                    console.info(name)
+                    var self = this;
+                    self.page++;
+                    var orderdata = {
+                        "reserveType":'0',
+                        "limit":self.limit,
+                        "page":self.page
+                    };
+                    if(name=='0'){//净菜
+                        self.$toast.loading({ forbidClick: true, duration: 0});
+                        httpKit.post("/park/shop/order/dishesOrder/list",orderdata,httpKit.type.form).then(res=>{
+                            self.$toast.clear();
+                            console.info(res);
+                            //self.dataList = res.data;
+                            self.sum = res.count;
+                            self.count = _.ceil(res.count / self.limit);
+                            self.dataList = self.dataList.concat(res.data);
+                            if (self.page >= '1')
+                                self.$refs[name][0].closePullDown();
+                        }).catch(err => {
+                            self.$toast.clear();
+                            self.$toast.fail({
+                                message: err.message
+                            });
+                        });
+                    }else{
+                        self.$toast.loading({ forbidClick: true, duration: 0});
+                        httpKit.post("/reserve/canyin/list",orderdata,httpKit.type.form).then(res=>{
+                            self.$toast.clear();
+                            console.info(res);
+                            //self.dataList = res.data;
+                            self.sum = res.count;
+                            self.count = _.ceil(res.count / self.limit);
+                            self.orderList = self.orderList.concat(res.data);
+                            if (self.page >= '1')
+                                self.$refs[name][0].closePullDown();
 
                         }).catch(err => {
                             self.$toast.clear();
@@ -182,8 +205,21 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
             },
             mounted(){
                 this.$nextTick(function () {
-                    //this.gbussiness()
-                    this. gorderlist('3','加班餐')
+                    var type = httpKit.urlParams().type;
+                    if(type=='jc'){
+                        this.active = '0';
+                        this.orderlist('0','净菜')
+                    }else if(type=='vip'){
+                        this.active = '1';
+                        this.orderlist('1','包厢')
+                    }else if(type=='swc'){
+                        this.active = '21';
+                        this.orderlist('2','商务餐')
+                    }else{
+                        this.active = '3';
+                        this.orderlist('3','加班餐')
+                    }
+
                 })
             }
         });

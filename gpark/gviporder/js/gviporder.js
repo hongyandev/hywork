@@ -215,7 +215,7 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                 httpKit.post("/reserve/canyin/addItem",data,httpKit.type.json).then(res=>{
                     self.$toast.clear();
                     self.$toast("预定成功");
-                    window.location.href='../../gpark/gmyordering/gmyordering.html'
+                    window.location.href='../../gpark/gmyordering/gmyordering.html?type=vip'
                 }).catch(err => {
                     self.$toast.clear();
                     self.$toast.fail({

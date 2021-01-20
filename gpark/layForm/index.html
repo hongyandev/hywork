@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>食堂消费记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="css/layui.css"  media="all">
+    <style>
+        @media only screen
+        and (max-device-width : 768px) {
+            .container .layui-inline{
+                margin:10px 0;
+            }
+        }
+        .container{margin:20px}
+        .week,.month{margin:0 10px 0 5px;padding:5px 10px;}
+        .active{background: #009f95;color:#fff;border-radius: 3px;padding:5px 15px;}
+        .active:hover{color:#fff}
+    </style>
+</head>
+<body>
+<div class="container">
+    <form id="sch-form" class="layui-form layui-form-pane" lay-filter="sch-form" onsubmit="return false;">
+        <div class="layui-inline beginDate" style="margin-bottom:10px">
+            <label class="layui-form-label">开始日期</label>
+            <div class="layui-input-block">
+                <input name="beginTimeFrom" type="text" autocomplete="off" id="startTime" class="layui-input laydate">
+            </div>
+        </div>
+        <div class="layui-inline endDate" style="margin-bottom:10px">
+            <label class="layui-form-label">结束日期</label>
+            <div class="layui-input-block">
+                <input name="beginTimeTo" type="text" autocomplete="off" id="endTime" class="layui-input laydate">
+            </div>
+        </div>
+        <div class="layui-inline"><a class="week active" href="javascript:void(0)">7天</a> <a class="month" href="javascript:void(0)">本月</a></div>
+        <button class="layui-btn" lay-submit id="btn-sch" id="btn-sch" ><i class="icon-search"></i> 查询</button>
+    </form>
+    <table id="form" lay-filter="test"></table>
+</div>
+
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="js/layui.all.js"></script>
+<script>
+    layui.use(['table','laydate'], function(){
+    var table = layui.table,
+        laydate = layui.laydate;
+        var col ;
+        if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            col=[[ //表头
+               {field: 'MONDEAL', title: '总金额', width:80}
+                ,{field: 'CLSNAME', title: '职业', width: 80}
+                ,{field: 'FEENAME', title: '备注', width: 135, sort: true}
+            ]]
+        } else {
+            col=[[ //表头
+                {field: 'PERCODE', title: 'ID', width:80, sort: true, fixed: 'left'}
+                ,{field: 'ACCNAME', title: '姓名', width:80}
+                ,{field: 'DEPNAME', title: '性别', width:80, sort: true}
+                ,{field: 'MONDEAL', title: '总金额', width:80}
+                ,{field: 'CLSNAME', title: '职业', width: 80}
+                ,{field: 'FEENAME', title: '备注', width: 135, sort: true}
+            ]]
+        }
+
+
+
+        table.render({
+            elem: '#form'
+            ,height: 315
+            ,url: '/layForm/data/jsonData.json' //数据接口
+            ,page: true //开启分页
+            ,cols:col
+        });
+        var nowday = new Date();
+        var startTime;
+        var endTime;
+        var today = timeConvert(nowday);//yymmdd
+        startTime = laydate.render({
+            elem:'#startTime',
+            type:'date',
+            btns: ['clear','confirm'],
+            format:'yyyyMMdd',
+            min:'2020-10-01',
+            ready: function(val){
+                startTime.hint('日期可选区间是31天');
+            },
+            done:function(value,date){
+
+                if(value){
+                    endTime.config.min = {
+                        year:date.year,
+                        month:date.month-1,
+                        date:date.date
+                    };
+                    endTime.config.max={
+                        year:date.year,
+                        month:date.month,
+                        date:date.date
+                    };
+                }else{
+                    endTime.config.min = {
+                        year:'1900',
+                        month:'1',
+                        date:'1'
+                    };
+                    endTime.config.max = {
+                        year:'2099',
+                        month:'12',
+                        date:'31'
+                    }
+                }
+                startTime.config.value = value;
+               /* var m = startTime.config.max.month = startTime.config.max.month < 10 ? ('0' + startTime.config.max.month) : startTime.config.max.month;
+                var d = startTime.config.max.date = startTime.config.max.date < 10 ? ('0' + startTime.config.max.date) : startTime.config.max.date;
+                startTime.config.value = startTime.config.max.year+''+m+''+d;*/
+
+            }
+        });
+        endTime=laydate.render({
+            elem:'#endTime',
+            type:'date',
+            btns: ['clear','confirm'],
+            format:'yyyyMMdd',
+            min:'2020-10-01',
+            ready: function(date){
+                endTime.hint('日期可选区间是31天');
+            },
+            done:function(value,date){
+                if(value){
+                    startTime.config.min = {
+                        year:date.year,
+                        month:date.month-2,
+                        date:date.date
+                    };
+                    startTime.config.max={
+                        year:date.year,
+                        month:date.month-1,
+                        date:date.date
+                    };
+                }else{
+                    startTime.config.min = {
+                        year:'1900',
+                        month:'1',
+                        date:'1'
+                    };
+                    startTime.config.max = {
+                        year:'2099',
+                        month:'12',
+                        date:'31'
+                    }
+                }
+                endTime.config.value = value;
+                /*var m = endTime.config.max.month = endTime.config.max.month < 10 ? ('0' + endTime.config.max.month) : endTime.config.max.month;
+                var d = endTime.config.max.date = endTime.config.max.date < 10 ? ('0' + endTime.config.max.date) : endTime.config.max.date;
+                endTime.config.value = endTime.config.max.year+''+m+''+d;*/
+            }
+        });
+        //点击过去7天
+        $(".week").on("click",function () {
+            $(this).addClass('active');
+            $(".month").removeClass('active');
+            var beforeweek = timeConvert(nowday.setDate((nowday.getDate()-7)));
+
+            console.info(beforeweek);
+
+
+        });
+        //点击本月
+        $(".month").on("click",function () {
+            $(this).addClass('active');
+            $(".week").removeClass('active');
+            var nowmonth = timeConvert(nowday.setDate(1));
+
+            console.info(nowmonth);
+
+
+        });
+        $("#btn-sch").on("click",function () {
+            //请求接口获取数据
+            //startTime.config.value //开始时间
+            //endTime.config.value   //结束时间
+
+            console.info(startTime.config.value);
+            console.info(endTime.config.value);
+            /*$("#sch-form")[0].reset();
+            endTime.config.min='1900-1-1';
+            startTime.config.max=endTime.config.max;*/
+            //startTime.config.value =
+        })
+    });
+    function timeConvert(timestamp){//num:0 YYYY-MM-DD  num:1  YYYY-MM-DD hh:mm:ss // timestamp:时间戳
+        timestamp = timestamp;
+        timestamp = timestamp.length==10?timestamp*1000:timestamp;
+        var date = new Date(timestamp);
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        m = m < 10 ? ('0' + m) : m;
+        var d = date.getDate();
+        d = d < 10 ? ('0' + d) : d;
+        return y +''+m +''+ d;
+
+    }
+</script>
+</html>

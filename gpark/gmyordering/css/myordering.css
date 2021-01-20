@@ -39,13 +39,19 @@
 .lists-jc .van-cell__title .clearfix{
     overflow: hidden;
     clear:both;
-    zoom:1
+    zoom:1;
+    font-size: 14px;
 }
 .lists-jc .van-cell__title .custom-title{
-    float:left
+    float:right;
+    font-size:12px;
+}
+.lists-jc .van-cell__title .custom-title b{
+    font-size:14px;
+    font-weight: normal;
 }
 .lists-jc .van-cell__title time{
-    float: right;
-    color:#999;
+    float: left;
+   /* color:#999;*/
 }
 
