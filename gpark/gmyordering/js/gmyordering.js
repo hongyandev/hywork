@@ -186,7 +186,6 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
             mounted(){
                 this.$nextTick(function () {
                     var type = httpKit.urlParams().type;
-                    debugger
                     if(type=='jc'){
                         this.active = '0';
                         this.orderlist('0','净菜')
