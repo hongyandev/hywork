@@ -186,6 +186,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
             mounted(){
                 this.$nextTick(function () {
                     var type = httpKit.urlParams().type;
+                    debugger
                     if(type=='jc'){
                         this.active = '0';
                         this.orderlist('0','净菜')
@@ -193,7 +194,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                         this.active = '1';
                         this.orderlist('1','包厢')
                     }else if(type=='swc'){
-                        this.active = '21';
+                        this.active = '2';
                         this.orderlist('2','商务餐')
                     }else{
                         this.active = '3';
