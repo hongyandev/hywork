@@ -143,7 +143,7 @@ require(['httpKit'], function (httpKit) {
                     self.$toast.clear();
                     console.info(res);
                     self.$toast("谢谢您的评价！");
-                    window.location.href='../../gpark/gmyordering/gmyordering.html'
+                    window.location.href='../../gpark/gmyordering/gmyordering.html?type=jbc'
 
                 }).catch(err => {
                     self.$toast.clear();
