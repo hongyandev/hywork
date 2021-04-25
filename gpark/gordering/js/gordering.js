@@ -30,13 +30,12 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <van-icon name="balance-list-o" size="30" color="#d281ff"/>
                             <span style="color:#d281ff;font-size:14px">餐厅消费记录</span>
                           </van-grid-item>
-                         
                           <van-grid-item clickable url="../gmenu/gmenu.html">
                             <van-icon name="description"  size="30" color="#ff7fb1"/>
                             <span style="color:#ff7fb1;font-size:14px">今日菜单</span>
                           </van-grid-item>
-                          <van-grid-item clickable>
-                            <van-icon name="shop-o" size="30" color="#603811"/>
+                          <van-grid-item clickable url="../gcoffee/gcoffee.html">
+                            <van-icon class="iconfont icon-kafei"  size="30" color="#603811"/>
                             <span style="color:#603811;font-size:14px">来杯咖啡</span>
                           </van-grid-item>
                           <van-grid-item clickable>
