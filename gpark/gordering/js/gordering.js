@@ -35,6 +35,10 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <van-icon name="description"  size="30" color="#ff7fb1"/>
                             <span style="color:#ff7fb1;font-size:14px">今日菜单</span>
                           </van-grid-item>
+                          <van-grid-item clickable url="../gcoffee/gcoffee.html">
+                            <van-icon class-prefix="iconfont icon-Coffee" name="extra" size="30" color="#009e86"/>
+                            <span style="color:#009e86;font-size:14px">咖啡预订</span>
+                          </van-grid-item>
                           <van-grid-item clickable>
                             <van-icon name="shop-o" size="30" color="#999"/>
                             <span style="color:#999;font-size:14px">小超市</span>
@@ -44,7 +48,6 @@ require(['httpKit','echarts'], function (httpKit, echarts) {
                             <span style="color:#999;font-size:14px">更多</span>
                           </van-grid-item>-->
                         </van-grid>
-                     
                         <div class="myorder">
                            <van-grid direction="horizontal" :column-num="1">
                               <van-grid-item url="../gmyordering/gmyordering.html?type=jbc" icon="orders-o" text="我的预订" />
