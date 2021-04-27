@@ -11,8 +11,26 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                                 <div v-if="tab.name=='0'">
                                     <div v-if="dataList.length>0">
                                         <pull-up-down :ref="tab.name" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="gorderlist(tab.name,tab.title)">
-                                                 <ul class="mayorder">
-                                                    <li v-for="item in dataList">
+                                                 <ul class="myorder">
+                                                    <li v-for="item in dataList"> 
+                                                        <van-swipe-cell :goodid="item.id" :before-close="beforeClose">
+                                                            <template #default>
+                                                            <div class="lists-jc">
+                                                                <div class="jc-item">
+                                                                    <div class="clearfix">
+                                                                        <time>{{item.completedTime}}</time>
+                                                                    </div>
+                                                                    <div class="jc-title"><span v-html="item.details"></span></div>
+                                                                </div>
+                                                                <div class="flex-item"><div>{{item.statusName}}</div><span>总金额：￥<b>{{item.goodsTotal}}</b></span></div>
+                                                            </div>
+                                                            </template>
+                                                            <template #right>
+                                                                  <van-button @click="delete(item.id)" square type="danger" text="删除" />
+                                                            </template>
+                                                        </van-swipe-cell>
+                                                    </li>
+                                                    <!--<li v-for="item in dataList">
                                                          <van-cell class="lists-jc" center :title="item.reserveTypeName" :label="item.reserveDate+' '+item.reserveTime" :value="item.statusName" >
                                                             <template #title>
                                                                 <div class="clearfix">
@@ -24,7 +42,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                                                                 <div v-html="item.details"></div>
                                                           </template>
                                                         </van-cell>
-                                                    </li>
+                                                    </li>-->
                                                  </ul>
                                          </pull-up-down>
                                     </div>
@@ -177,6 +195,35 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit, PullUpDown, backT
                         });
 
                     }
+
+                },
+                beforeClose(obj) {
+                    var self = this;
+                    switch (obj.position) {
+                        case 'outside':
+                            obj.instance.close();
+                            break;
+                        case 'right':
+                            self.$dialog.confirm({
+                                message: '确定要删除此订单吗？',
+                            }).then(() => {
+                                self.$toast.loading({ forbidClick: true, duration: 0});
+                                httpKit.post("/park/shop/order/dishesOrder/cancel",{orderId:obj.instance.$attrs.goodid},httpKit.type.form).then(res=>{
+                                    self.$toast.clear();
+                                    console.info(res);
+                                    self.active = '0';
+                                    self.orderlist('0','净菜')
+                                }).catch(err => {
+                                    self.$toast.clear();
+                                    self.$toast.fail({
+                                        message: err.message
+                                    });
+                                });
+                            });
+                            break;
+                    }
+                },
+                delete(orderid){
 
                 }
             },

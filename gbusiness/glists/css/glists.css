@@ -1,0 +1,51 @@
+.bg{
+    position:relative;
+    min-height:100vh;
+    padding-bottom:195px;    /*将padding-bottom大小设置为底部内容的高度*/
+    box-sizing:border-box
+}
+.mayorder li{
+    border-bottom:1px solid #f7f7f7;
+}
+.bgimage img{
+    position: absolute;
+    bottom:0;
+    height:195px;
+    width: 100%;
+    /*background:url('../img/jyls.png')no-repeat center;*/
+    /*background-size: contain;*/
+}
+.detailMenu label{
+    margin-top:5px;
+    font-size:14px;
+    float: left;
+}
+.detailMenu .button{
+    text-align: right;
+    padding:10px 15px;
+    border-bottom:1px solid #f7f7f7;
+    overflow: hidden;
+}
+.menu-title{
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    justify-content: space-between;
+}
+.menu-title span{
+    font-size:12px;
+    color:#999
+}
+.lists-jc .van-cell__title .clearfix{
+    overflow: hidden;
+    clear:both;
+    zoom:1
+}
+.lists-jc .van-cell__title .custom-title{
+    float:left
+}
+.lists-jc .van-cell__title time{
+    float: right;
+    color:#999;
+}
+

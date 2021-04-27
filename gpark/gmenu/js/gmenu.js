@@ -60,7 +60,7 @@ require(['httpKit','lodash'], function (httpKit, _) {
                                         <span>{{food.dishesName}}</span>
                                   </template>
                                   <template #right-icon>
-                                     <van-stepper v-model="food.num" async-change theme="round" button-size="22" min="0" @minus="deleteNum(food)" @change="changeNum(food)"/>
+                                     <van-stepper v-model="food.num" async-change theme="round" button-size="22" min="0" @change="changeNum(food)"/>
                                   </template>
                                 </van-cell>
                              </van-popup>
@@ -70,7 +70,7 @@ require(['httpKit','lodash'], function (httpKit, _) {
                                   <van-cell title="订购菜单">
                                       <template #label>
                                           <van-row>
-                                            <van-col v-for="food in carOrderlist.foodlist" span="6" justify="space-between">{{food.dishesName}}×{{food.num}}</van-col>
+                                            <van-col v-for="food in carOrderlist.foodlist" span="8" justify="space-between">{{food.dishesName}}×{{food.num}}</van-col>
                                           </van-row>
                                       </template>
                                   </van-cell>
@@ -159,11 +159,12 @@ require(['httpKit','lodash'], function (httpKit, _) {
                     });
                     if(item.num == 0){
                       this.carOrderlist.foodlist.splice(this.carOrderlist.foodlist.findIndex(food => item.dishesId === food.dishesId), 1);
-                    }
-                    if(this.content == 0){
-                        this.showpopup = false
+
                     }
                     this.content = this.carOrderlist.foodlist.length
+                    if(this.carOrderlist.foodlist == 0){
+                        this.showpopup = false
+                    }
                 },
                 showcarorder(){
                     if(this.carOrderlist.foodlist.length == 0){
@@ -182,6 +183,11 @@ require(['httpKit','lodash'], function (httpKit, _) {
                         this.caritem = true
                     }
                 },
+                isPhoneNo(phone) {
+                    if(!phone)return true;
+                    var pattern = /^1[3456789]\d{9}$/;
+                    return pattern.test(phone);
+                },
                 confirmorder(){
                     var self = this;
                     self.$toast.loading({ forbidClick: true, duration: 0});
@@ -192,6 +198,10 @@ require(['httpKit','lodash'], function (httpKit, _) {
                             "quantity":item.num
                         }
                     })
+                    if(!self.isPhoneNo(self.userphone)){
+                        self.$toast("手机号码不正确！");
+                        return false
+                    }
                     var data = {
                         "detail": foodlist,
                         "shipName": self.username,
