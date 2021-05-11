@@ -6,7 +6,13 @@
     left:0;
 
 }
-
+.cs{
+    position: fixed;
+    width: 45%;
+    bottom:70px;
+    left:10px;
+    height:30px;
+}
 @font-face {
     font-family: '';
 }
