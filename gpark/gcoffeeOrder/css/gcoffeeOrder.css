@@ -1,51 +1,63 @@
 .bg{
     position:relative;
     min-height:100vh;
-    padding-bottom:195px;    /*将padding-bottom大小设置为底部内容的高度*/
-    box-sizing:border-box
+    padding-bottom:50px;    /*将padding-bottom大小设置为底部内容的高度*/
+    box-sizing:border-box;
+    background:#f7f7f7;
 }
-.mayorder li{
-    border-bottom:1px solid #f7f7f7;
+.shopContent ul{
+    background-color:#fff;
 }
-.bgimage img{
-    position: absolute;
-    bottom:0;
-    height:195px;
-    width: 100%;
-    /*background:url('../img/jyls.png')no-repeat center;*/
-    /*background-size: contain;*/
+.shopContent ul li .van-card{
+    background-color: #fff;
 }
-.detailMenu label{
-    margin-top:5px;
-    font-size:14px;
-    float: left;
-}
-.detailMenu .button{
-    text-align: right;
-    padding:10px 15px;
-    border-bottom:1px solid #f7f7f7;
-    overflow: hidden;
-}
-.menu-title{
-    display: -webkit-flex;
-    display: -moz-box;
+.shopContent ul li .order-top{
     display: flex;
     justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom:1px solid #f7f7f7;
+    font-size:14px;
 }
-.menu-title span{
-    font-size:12px;
-    color:#999
+.shopContent ul li .order-top time{
+    font-size:14px;
 }
-.lists-jc .van-cell__title .clearfix{
-    overflow: hidden;
-    clear:both;
-    zoom:1
+.operat-btn{
+    padding:10px 15px;
+    display: flex;
+    justify-content: space-between;
+    border-top:1px solid #f7f7f7;
+    border-bottom:5px solid #f7f7f7;
+    font-size:14px;
 }
-.lists-jc .van-cell__title .custom-title{
-    float:left
+.operat-btn .van-button{
+    margin-left:10px;
+
 }
-.lists-jc .van-cell__title time{
-    float: right;
-    color:#999;
+.btns .van-button--small{
+    padding:0 20px
+}
+.btnGroup{
+    width: 136px;
+    height:40px;
+    border-radius:10px;
+    padding:2px 10px;
+    background: #000;
+    opacity: 0.6;
+    position: fixed;
+    bottom:15px;
+    left:15px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.space-line{
+    height:80%;
+    width: 1px;
+    background: #fff;
+}
+.btnGroup .van-icon{
+    font-size:30px;
+    color:#fff;
+    vertical-align: middle;
 }
 
