@@ -5,9 +5,7 @@
     bottom:0;
     border-top:1px solid #f7f7f7;
 }
-.shopContent{
-    padding-bottom:90px;
-}
+
 li .van-checkbox__icon--checked .van-icon{
     background:#f74022 !important;
 }
@@ -94,17 +92,13 @@ li .shops {
     padding:15px;
 }
 /*地址*/
-.van-address-list__bottom{
-    display: none;
-}
+
 .van-address-item__value{
     padding-right:0;
 }
-.van-address-item__edit{
-    display: none;
-}
 .van-address-list{
-    padding:12px;
+    padding:12px 12px 50px 12px;
+    overflow-y:scroll;
 }
 
 .addressinfo{
@@ -146,6 +140,9 @@ li .shops {
 .empty .success{
     font-size:120px;
 }
+.empty .fail{
+    font-size:120px;
+}
 .btnCenter{
     margin-top: 20px;
     text-align: center;
@@ -161,4 +158,36 @@ li .shops {
 
 .buttons button {
     margin-top: 16px;
+}
+.van-doc-demo-block__title {
+    margin: 0;
+    padding: 32px 16px 16px;
+    color: rgba(69, 90, 100, 0.6);
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+}
+.btnGroup{
+    width: 136px;
+    height:40px;
+    border-radius:10px;
+    padding:2px 10px;
+    background: #000;
+    opacity: 0.6;
+    position: fixed;
+    bottom:15px;
+    left:15px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.space-line{
+    height:80%;
+    width: 1px;
+    background: #fff;
+}
+.btnGroup .van-icon{
+    font-size:30px;
+    color:#fff;
+    vertical-align: middle;
 }

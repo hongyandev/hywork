@@ -1,10 +1,34 @@
 require(['httpKit'], function (httpKit) {
-    new Vue({
+     new Vue({
         el: '#gsubmitOk',
         template: `<div>
-                       <div class="empty">
+                       <div v-if="status==2" class="empty">
                             <van-icon class="success" color="#07c160" name="passed"/>
-                            <p>订单提交{{msg}}</p>
+                            <p>支付成功！</p> 
+                            <div class="buttons">
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
+                                <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                            </div>
+                       </div>
+                       <div v-else-if="status==9" class="empty">
+                            <van-icon class="fail" name="close" color="#f00" />
+                            <p>支付超时！</p>
+                            <div class="buttons">
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
+                                <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                            </div>
+                       </div>
+                       <div v-else-if="status==3" class="empty">
+                            <van-icon class="fail" name="close" color="#f00" />
+                            <p>支付异常！</p>
+                            <div class="buttons">
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
+                                <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                            </div>
+                       </div>
+                       <div v-else class="empty">
+                            <van-loading size="80px" type="spinner" color="#006633" />
+                            <p>支付中。。。</p>
                             <div class="buttons">
                                 <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
                                 <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
@@ -28,33 +52,25 @@ require(['httpKit'], function (httpKit) {
                     `,
         data() {
             return {
-                payId: httpKit.urlParams().out_trade_no ? httpKit.urlParams().out_trade_no : '',
-                msg:'中......',
-                carOrderlist:JSON.parse(localStorage.getItem('cartData')),
-                timeStamp:null
+                out_trade_no:'' ||  JSON.parse(localStorage.getItem('paycode')).out_trade_no,
+                //timeStamp:null,
+                status:1,
+                cartNum:JSON.parse(localStorage.getItem('cartLength'))
             };
         },
         methods: {
             getResult(){
                 var self = this;
-                    this.$toast.loading({forbidClick: true, duration: 0});
+                    self.$toast.loading({forbidClick: true, duration: 0});
                     var data = {
-                        out_trade_no: self.payId
+                        out_trade_no: self.out_trade_no
                     };
                     httpKit.post("/coffee/pay/result", data, httpKit.type.form).then(res => {
                         self.$toast.clear();
-                        self.$toast(self.payId,5000)
-                        if(res.data.paystatus=='2'){
-                            self.msg = '成功'
-                        }else if(res.data.paystatus=='' ||!res.data.paystatus){
-                            self.msg = '中......'
-                        }else{
-                            self.msg = '失败'
-                        }
-                        clearTimeout(self.timeStamp);
+                        //vm.$set(self,'status', res.data.paystatus);
+                        self.status = res.data.paystatus
                     }).catch(err => {
                         self.$toast.clear();
-                        self.$toast(self.payId,5000)
                         self.$toast.fail({
                             message: err.message
                         });
@@ -84,33 +100,71 @@ require(['httpKit'], function (httpKit) {
 
         },
         created(){
+            var self = this;
             var paydata = JSON.parse(localStorage.getItem('paydata'));
-            //window.localStorage.removeItem('paydata');
-            const div = document.createElement("div");
-            div.innerHTML = paydata.paystr;
-            document.body.appendChild(div);
-            document.forms[0].submit();
+            if(paydata || self.out_trade_no){
+                if(paydata){
+                    self.out_trade_no = paydata.code;
+                }
+                var paycode = {
+                    "out_trade_no":self.out_trade_no
+                };
+                window.localStorage.setItem('paycode', JSON.stringify(paycode));
+                self.out_trade_no = JSON.parse(localStorage.getItem('paycode')).out_trade_no;
+                if(!self.out_trade_no) {
+                    self.$dialog.alert({
+                        message: '订单支付失败,查看订单列表',
+                    }).then(() => {
+                        window.location.href='../gcoffeeOrder/gcoffeeOrder.html'
+                    });
+                } else {
+                    window.localStorage.removeItem('paydata');
+                    if(paydata){
+                        const div = document.createElement("div");
+                        div.innerHTML = paydata.paystr;
+                        document.body.appendChild(div);
+                        document.forms[0].submit();
+                    }
+
+                }
+            } else {
+                self.$dialog.alert({
+                    message: '支付订单创建失败,查看订单列表',
+                }).then(() => {
+                    window.location.href='../gcoffeeOrder/gcoffeeOrder.html'
+                });
+            }
         },
         mounted(){
             var self = this;
             self.$nextTick(function () {
                 var count = 0;
-                function execTimer(fn,timer){
-                    if(self.timeStamp)
-                        clearTimeout(self.timeStamp);
-                    this.timeStamp = setTimeout(function(){
-                        count++;
-                        if(count <= (10 * 60 * 1000 / timer)){
-                            fn();
-                            execTimer(fn,timer);
-                        }else{
-                            clearTimeout(self.timeStamp);
-                        }
-                    },timer);
-                }
-                execTimer(()=>{
-                    self.getResult()
-                },5 * 1000)
+                var timeStamp = null;
+
+                    function execTimer(fn,timer){
+                        if(timeStamp)
+                            clearTimeout(timeStamp);
+                        timeStamp = setTimeout(function(){
+                            count++;
+                            if(count <= (3 * 60 * 1000 / timer)){
+                                fn();
+                                execTimer(fn,timer);
+                                if(self.status==2){
+                                    clearTimeout(timeStamp);
+                                }
+                                if(self.status==3|| self.status==9){
+                                    clearTimeout(timeStamp);
+                                }
+                            }else{
+                                clearTimeout(timeStamp);
+                            }
+                        },timer);
+                    }
+                    execTimer(()=>{
+                        self.getResult()
+
+                    },5 * 1000)
+
             })
         }
     });

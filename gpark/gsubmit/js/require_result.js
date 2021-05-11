@@ -10,6 +10,6 @@ define(function () {
         }
     });
     require(["bridge"], function() {
-        require(["../../gsubmit/js/gsubmitOk"])
+        require(["../../gsubmit/js/gsubmitResult"])
     })
 });

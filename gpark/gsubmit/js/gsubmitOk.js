@@ -3,48 +3,74 @@ require(['httpKit'], function (httpKit) {
         el: '#gsubmitOk',
         template: `<div>
                        <div class="empty">
-                            <van-icon class="success" color="#07c160" name="passed" @click="tap" />
-                            <p>订单提交成功！</p>
-                            <!--
-                            <div class="btnCenter">
-                                <van-button  type="primary" @click="goShoping">继续购物</van-button>
-                                <van-button plain type="primary" @click="goOrder">查看订单</van-button>
-                                <van-button plain type="info" @click="goPayment">到款录入</van-button>
-                            </div>
-                            -->
+                            <van-icon class="success" color="#07c160" name="passed"/>
+                            <p>订单提交{{msg}}</p>
                             <div class="buttons">
                                 <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
                                 <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
-                                <van-button plain type="info" @click="goPayment" block>到款录入</van-button>
                             </div>
-                            <div v-if="payId > 0 && showPay>5" class="buttons">
-                                <p>支付订单号：{{payId}}</p>
-                                <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" @click="goPay"  block>在线支付</van-button>
-                            </div>
+                       </div>
+                       <div class="btnGroup">
+                           <van-icon name="manager-o" @click="gorder" />
+                           <div class="space-line"></div>
+                           <van-icon name="apps-o" @click="gcoffee"/>
+                           <div class="space-line"></div>
+                           <div v-if="cartNum == 0" @click="gcart">
+                               <van-icon name="shopping-cart-o" size="24px" color="#fff"/>
+                           </div>
+                           <van-badge v-else :content="cartNum">
+                                <div @click="gcart">
+                                    <van-icon name="shopping-cart-o" size="24px" color="#fff"/>
+                                </div>
+                           </van-badge>
                        </div>
                     </div>
                     `,
         data() {
             return {
-                payId: null,
-                showPay: 0
+                payId: httpKit.urlParams().out_trade_no ? httpKit.urlParams().out_trade_no : '',
+                msg:'中......',
+
             };
         },
         methods: {
-            tap(){
-                this.showPay += 1
+            getResult(){
+                var self = this;
+                    this.$toast.loading({forbidClick: true, duration: 0});
+                    var data = {
+                        out_trade_no: self.payId
+                    };
+                    httpKit.post("/coffee/pay/result", data, httpKit.type.form).then(res => {
+                        self.$toast.clear();
+                        if(res.data.paystatus=='2'){
+                            self.msg = '成功'
+                        }else if(res.data.paystatus=='' ||!res.data.paystatus){
+                            self.msg = '中......'
+                        }else{
+                            self.msg = '失败'
+                        }
+
+                    }).catch(err => {
+                        self.$toast.clear();
+                        self.$toast.fail({
+                            message: err.message
+                        });
+                    });
             },
             goShoping(){
-                window.location.href = "../gcat/gcat.html"
+                window.location.href='../gcoffee/gcoffee.html'
             },
             goOrder(){
-                window.location.href = "../gorder/gorder.html"
+                window.location.href='../gcoffeeOrder/gcoffeeOrder.html'
             },
-            goPayment(){
-                window.location.href = "../gpayment/gpayment.html"
+            gcart(){
+                window.location.href='../gcoffee/gcoffee.html?showcart=1'
             },
-            goPay(){
-                window.location.href = "../gpay/gpay.html?payId="+this.payId
+            gorder(){
+                window.location.href='../gcoffeeOrder/gcoffeeOrder.html'
+            },
+            gcoffee(){
+                window.location.href='../gcoffee/gcoffee.html'
             }
         },
         computed: {
@@ -54,15 +80,12 @@ require(['httpKit'], function (httpKit) {
 
         },
         created(){
-            var self = this
-            if (httpKit.urlParams() && httpKit.urlParams().payId)
-                self.payId = httpKit.urlParams().payId
-            else
-                self.payId = -1
+
         },
         mounted(){
-            this.$nextTick(function () {
-
+            var self = this;
+            self.$nextTick(function () {
+               self.getResult();
             })
         }
     });

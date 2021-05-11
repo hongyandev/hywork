@@ -7,6 +7,8 @@ define(function () {
             "bridge":"webJsBridge",
             "lodash": "lib/lodash.min",
             "httpKit": "httpKit",
+            "PullUpDown": "lib/plugins/PullUpDown",
+            "backTop": "lib/plugins/backTop/backTop",
         }
     });
     require(["bridge"], function() {
