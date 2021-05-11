@@ -29,7 +29,7 @@ define(function () {
                     document.documentElement.scrollTop = top - speed;
                     window.pageYOffset = top - speed;
                     document.body.scrollTop = top - speed;
-                    console.info(top);
+                   // console.info(top);
                     if (speed === 0) {
                         document.body.scrollTop = 0;
                         window.pageYOffset = 0;

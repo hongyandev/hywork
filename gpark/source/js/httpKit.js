@@ -10,8 +10,10 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
     }
 
     var instance = axios.create({
-        //baseURL: "http://127.0.0.1:8080/"
-         baseURL: "http://dev.sge.cn/rest" //"http://dev.sge.cn/rest" //"http:172.60.15.201:8080" //"http://dev.sge.cn/rest"       //"http://172.60.15.201:9666" //"http://172.30.8.90:9666"
+       // baseURL:'http://218.75.78.166:9999',
+       // baseURL: "http://172.60.15.200:9999"
+       //  baseURL: "http://172.30.8.23/rest"
+        baseURL: "http://dev.sge.cn/rest" //"http://dev.sge.cn/rest" //"http:172.60.15.201:8080" //"http://dev.sge.cn/rest"       //"http://172.60.15.201:9666" //"http://172.30.8.90:9666"
     });
 
 
@@ -47,6 +49,7 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
             switch (error.response.status) {
                 case 401: { // 账号密码错误，账号被冻结，token过期等
                     bridge.goLogin();
+                    //this.$toast(error.response)
                     break;
                 }
             }

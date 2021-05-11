@@ -41,7 +41,10 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
                                         <div v-else class="item-l"><img :src="item.imgUrl"></div>
                                         <div class="item-r">
                                             <div class="van-multi-ellipsis--l2">{{item.cleanContent}}</div>
-                                            <time>{{item.createTime}}</time>
+                                            <div style="margin-top:5px;">
+                                                <span style="margin-right:10px;">{{item.signature}}</span>
+                                                <time>{{item.createTime}}</time>
+                                            </div>
                                         </div>
                                     </div>
                                     </li>

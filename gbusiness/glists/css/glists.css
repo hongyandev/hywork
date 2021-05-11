@@ -1,51 +1,98 @@
-.bg{
-    position:relative;
-    min-height:100vh;
-    padding-bottom:195px;    /*将padding-bottom大小设置为底部内容的高度*/
-    box-sizing:border-box
+.order{
+    margin-bottom:15px;
+
 }
-.mayorder li{
-    border-bottom:1px solid #f7f7f7;
+.order li{
+    margin:10px;
+    padding:10px 0;
+    background-color: #fff;
+    border-radius:8px;
 }
-.bgimage img{
-    position: absolute;
-    bottom:0;
-    height:195px;
-    width: 100%;
-    /*background:url('../img/jyls.png')no-repeat center;*/
-    /*background-size: contain;*/
-}
-.detailMenu label{
-    margin-top:5px;
-    font-size:14px;
-    float: left;
-}
-.detailMenu .button{
-    text-align: right;
-    padding:10px 15px;
-    border-bottom:1px solid #f7f7f7;
-    overflow: hidden;
-}
-.menu-title{
-    display: -webkit-flex;
-    display: -moz-box;
+.order .order-top{
     display: flex;
     justify-content: space-between;
 }
-.menu-title span{
-    font-size:12px;
-    color:#999
-}
-.lists-jc .van-cell__title .clearfix{
-    overflow: hidden;
-    clear:both;
-    zoom:1
-}
-.lists-jc .van-cell__title .custom-title{
-    float:left
-}
-.lists-jc .van-cell__title time{
-    float: right;
-    color:#999;
-}
 
+.order .order-top .new-icon{
+    height:20px;
+    width:35px;
+    font-size:12px;
+    line-height:20px;
+    text-align: center;
+    border-radius: 0 0 10px 0;
+    background-color: #ff5a00;
+    color:#fff;
+    font-style: normal;
+    margin-right:15px;
+}
+.order-item-addr .van-icon{
+    vertical-align: middle;
+    margin-right:5px;
+}
+.order .order-top span{
+    display: flex;
+    font-size:14px;
+}
+.order .order-top em{
+    font-style: normal;
+    padding-left:15px;
+    font-size:14px;
+}
+.order .order-top label{
+    padding-right:10px;
+    color:#f11627;
+    font-size: 12px;
+}
+.order .order-top label b{
+    font-size:16px;
+}
+.order .order-item{
+    padding:10px 15px;
+    font-size:14px;
+    color:#333;
+}
+.order .order-item .order-item-info{
+    display: flex;
+    justify-content: space-between;
+    padding:10px 0;
+}
+.order .order-item .order-item-info .van-icon{
+    vertical-align: middle;
+    margin-right:5px;
+}
+.order .order-item .order-note{
+    background-color: #f7f7f7;
+    padding:10px;
+    border-radius:5px;
+}
+.order .order-item .order-note b{
+    margin-right:10px;
+}
+.order .order-btn{
+    padding:10px 15px;
+}
+.setting{
+    position: fixed;
+    right:20px;
+    bottom:30px;
+    width: 50px;
+    height:50px;
+    border-radius: 50%;
+    text-align: center;
+    line-height:50px;
+    font-size:15px;
+    color:#fff;
+    z-index: 99;
+}
+.setting .van-icon{
+    font-size:50px;
+}
+.bg-color{
+    background-color: #006633;
+}
+.bg-gray{
+    background-color: #646566;
+}
+.van-tab__text--ellipsis{
+    overflow: initial;
+}

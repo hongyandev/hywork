@@ -10,6 +10,7 @@ define(['axios', 'qs', 'lodash'], function (axios, Qs, _) {
     }
 
     var instance = axios.create({
+        //baseURL: "http://172.60.15.200:9999"
         baseURL: "http://dev.sge.cn/rest" //"http://dev.sge.cn/rest" //"http:172.60.15.201:8080" //"http://dev.sge.cn/rest"       //"http://172.60.15.201:9666" //"http://172.30.8.90:9666"
     });
 

@@ -7,7 +7,7 @@ require(['httpKit','PullUpDown','backTop'], function (httpKit,PullUpDown,backTop
         },
         template: `<div class="noticeDetail">
                       <h3>{{content.title}}</h3>
-                      <time>{{content.createTime}}</time>
+                      <span style="margin-right:5px;font-size:12px;color:#999">{{content.signature}}</span><time>{{content.createTime}}</time>
                       <div v-html="content.content"></div>
                     </div>
                     `,

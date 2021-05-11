@@ -3,7 +3,7 @@ require(['httpKit'], function (httpKit) {
         el: '#gmeet',
         template: `<div style="text-align: center;margin-top:20%">
                        <van-icon v-show="result.success == true" size="100px" color="#009D85" name="checked" />
-                       <van-icon v-show="result.success == false || result == null" size="100px" color="#f00" name="clear" />
+                       <van-icon v-show="result.success == false || result == null" size="100px" color="#1989fa" name="warning-o" />
                        <div>{{result.message}}</div>
                        <div v-show="show">
                             <div style="margin: 20px 20px 15px">请通过鸿雁云商打开扫一扫</div>

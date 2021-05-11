@@ -117,14 +117,14 @@ wbjsBridge.method.returnBack = function () {
  * @param funcCallback
  */
 wbjsBridge.method.getToken = function (funcCallback) {
-   // funcCallback("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDY0MDciLCJleHAiOjE2MDcyNDUzODIsInVzZXJJZCI6MTA2NDA3LCJpYXQiOjE2MDY2NDA1ODIsImFjY291bnQiOiIwMDAwMDAwMCwwNjQwNyIsInVzZXJLZXkiOiJ4eHh4In0.TZwTIuumn-8mER3lcfOM0335V1VuiUMm8d-rT8xwzI_BfwwTc_lLD8MpgfirKhJ9O3v5NKSuzgXzgFoCYQox_w");
-    wbjsBridge.method.bridge.callHandler("getToken", {}, function (response) {
+    funcCallback("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMzkwMjkzMDY1MDg3ODc3MTIyIiwiZXhwIjoxNjIwODA5NzIzLCJ1c2VySWQiOjEzOTAyOTMwNjUwODc4NzcxMjIsImlhdCI6MTYyMDYzNjkyMywiYWNjb3VudCI6Imh5c2oiLCJ1c2VyS2V5IjoieHh4eCJ9.64d3IeQzZPHUKI1wg3osa_FU0wHA5dawcN2FQzapB1hcgCPApq3YakHzAC0qjh-DnCPyY1mUaxd58Lyl52JXKQ");
+    /*wbjsBridge.method.bridge.callHandler("getToken", {}, function (response) {
         console.info("getToken got response: ", response);
 
         if (typeof funcCallback == "function") {
             funcCallback(response);
         }
-    });
+    });*/
 }
 
 wbjsBridge.method.scanQRCode = function (funCallback) {
