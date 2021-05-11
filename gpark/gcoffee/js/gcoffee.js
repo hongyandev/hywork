@@ -7,39 +7,15 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
             'back-top':backTop
         },
         template: `<div>
-                        <!--<div class="search">
-                            <van-search
-                            show-action
-                            shape="round"
-                            v-model="keyword"
-                            placeholder="请输入搜索关键词"
-                            >
-                              <template #action>
-                                <div @click="onSearch(keyword)">搜索</div>
-                              </template>
-                            </van-search>
-                        </div>-->
+                       <van-divider v-show="status=='2'" :style="{ borderColor: '#fff', padding: '0 5px',color:'#999',margin:'5px 0' }">营业时间：8:00-20:00</van-divider>
+                       <van-divider v-show="status=='1'" :style="{ borderColor: '#fff', padding: '0 5px',color:'#999',margin:'5px 0' }">店面休息,暂不支持线上下单</van-divider>
                         <div class="lists">
                              <ul class="pull">
                                  <pull-up-down class="goodslists" ref="pull" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="onLoad()">
-                                    <li>
+                                  <li v-for="item in list">
                                         <div class="picheight">
-                                            <a class="goodsImg" href="javascript:void(0)">
-                                                <van-image lazy-load src="https://img01.yzcdn.cn/vant/cat.jpeg"/>
-                                            </a>
-                                        </div>
-                                        <div>
-                                             <div class="van-ellipsis"><a class="fontgray" href="javascript:void(0)">意式浓缩</a></div>
-                                             <div class="pbttom">
-                                                <div><span>￥16.00<s class="originalPrice">￥22.00</s></span></div>
-                                                <van-icon @click="addcart" name="shopping-cart-o" />
-                                             </div>
-                                        </div>
-                                    </li>
-                                  <!--<li v-for="item in list">
-                                        <div class="picheight">
-                                            <a class="goodsImg" :goodId="item.productId" href="javascript:void(0)">
-                                                <van-image lazy-load :src="item.url"/>
+                                            <a class="goodsImg" :goodId="item.coffeeId" href="javascript:void(0)">
+                                                <van-image lazy-load :src="item.ossurl"/>
                                             </a>
                                         </div>
                                         <div>
@@ -47,140 +23,83 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
                                              <div class="pbttom">
                                                 <div v-if="item.price"><span>￥{{item.price}}<s class="originalPrice">￥{{item.originalPrice}}</s></span></div>
                                                 <div v-else><span>￥{{item.originalPrice}}</span></div>
-                                                &lt;!&ndash;<van-icon @click="addcart(item.id)" name="shopping-cart-o" />&ndash;&gt;
+                                                <div class="cart-icon" @click="addcart(item)">
+                                                     <van-icon v-model="item.num" name="shopping-cart-o" />
+                                                </div>
                                              </div>
                                         </div>
-                                    </li>-->
+                                    </li>
                                  </pull-up-down>
                              </ul>
                         </div>
                         </van-list>
-                        <van-sku
-                          v-model="show"
-                          :sku="sku"
-                          :goods="goods"
-                          :goods-id="goodsId"
-                          :quota="quota"
-                          :quota-used="quotaUsed"
-                          :hide-stock="sku.hide_stock"
-                          :show-add-cart-btn="showAddCartBtn"
-                          @buy-clicked="onBuyClicked"
-                          @add-cart="onAddCartClicked"
-                        >
-                       </van-sku>
-                       <div class="btnGroup">
-                           <van-icon name="manager-o"/> 
+                        <div class="btnGroup">
+                           <van-icon name="manager-o" @click="gorder" />
                            <div class="space-line"></div>
-                           <van-icon name="shopping-cart-o"  @click="gcart"/>
+                           <van-icon name="apps-o" @click="gcoffee"/>
+                           <div class="space-line"></div>
+                           <div v-if="cartNum == 0" @click="gcart">
+                               <van-icon name="shopping-cart-o" size="24px" color="#fff"/>
+                           </div>
+                           <van-badge v-else :content="cartNum">
+                                <div @click="gcart">
+                                    <van-icon name="shopping-cart-o" size="24px" color="#fff"/>
+                                </div>
+                           </van-badge>
                        </div>
-                       <back-top></back-top>
+                       <van-popup v-model="showcart" :close-on-click-overlay="false" closeable close-icon-position="top-right" position="right" @close="closecart" :style="{ height: '100%',width:'100%' }" >
+                         <div class="pddingTop" >
+                            <div class="shopContent" v-if="carOrderlist.coffeelist.length>0">
+                                <ul>
+                                    <li v-for="(item,i) in carOrderlist.coffeelist">
+                                       <div class="shopmain"> 
+                                             <van-swipe-cell :goodid="item.id" style="width: 100%;" :before-close="beforeClose">
+                                                <div class="shops">
+                                                    <div class="shopImg"><img :src="item.ossurl" alt=""></div>
+                                                    <div class="shopsright">
+                                                        <h4>{{item.name}}</h4>
+                                                         <div class="shoprightbot">
+                                                            <div class="coffee-price">￥{{parseFloat(item.price)}}<s>￥{{parseFloat(item.originalPrice)}}</s></div>
+                                                            <div class="shopradd">
+                                                                <van-stepper v-model="item.buynum" @change="changeNum(item)" /> 
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>  
+                                                </div>
+                                                <template #right>
+                                                    <van-button style="height:100%" square type="danger" text="删除"  class="devare-button"/>
+                                                </template>
+                                            </van-swipe-cell>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div> 
+                            <van-empty v-else description="购物车空空如也" />
+                        </div>
+                       </van-popup>
+                       <div v-show="showcart">
+                             <van-submit-bar v-if="carOrderlist.coffeelist.length>0" :safe-area-inset-bottom="false" :price="totalMoney * 100" button-text="提交" @submit="onSubmit"/> 
+                             <van-submit-bar v-else disabled :safe-area-inset-bottom="false" :price="totalMoney * 100" button-text="提交" @submit="onSubmit"/> 
+                        </div>
+                         <back-top></back-top>
                     </div>`,
 
         data() {
             return {
                 // keyword: httpKit.urlParams().name ? decodeURI(httpKit.urlParams().name) : '',
-                show:false,
+                showcart:false,
+                showcartbtn:false,
                 page:1,
-                limit:8,
+                cartpage:1,
+                limit:20,
                 sum:0,
                 count:0,
                 list:[],
-                sku: {
-                    // 数据结构见下方文档
-                    // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
-                    // 可以理解为一个商品可以有多个规格类目，一个规格类目下可以有多个规格值。
-                    tree: [
-                        {
-                            k: '颜色', // skuKeyName：规格类目名称
-                            v: [
-                                {
-                                    id: '30349', // skuValueId：规格值 id
-                                    name: '红色', // skuValueName：规格值名称
-                                    imgUrl: 'https://honyar.oss-cn-hangzhou.aliyuncs.com/pic/202005/1258935258909310977.jpg', // 规格类目图片，只有第一个规格类目可以定义图片
-                                    previewImgUrl: 'https://honyar.oss-cn-hangzhou.aliyuncs.com/pic/202005/1258935258909310977.jpg', // 用于预览显示的规格类目图片
-                                },
-                                {
-                                    id: '1215',
-                                    name: '蓝色',
-                                    imgUrl: 'https://honyar.oss-cn-hangzhou.aliyuncs.com/pic/202005/1258931974823804930.jpg',
-                                    previewImgUrl: 'https://honyar.oss-cn-hangzhou.aliyuncs.com/pic/202005/1258931974823804930.jpg',
-                                }
-                            ],
-                            k_s: 's1' // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
-                        },
-                        {
-                            k: '尺寸', // skuKeyName：规格类目名称
-                            v: [
-                                {
-                                    id: '30369', // skuValueId：规格值 id
-                                    name: 'XXL', // skuValueName：规格值名称
-                                    imgUrl: '', // 规格类目图片，只有第一个规格类目可以定义图片
-                                    previewImgUrl: '', // 用于预览显示的规格类目图片
-                                },
-                                {
-                                    id: '1269',
-                                    name: 'XL',
-                                    imgUrl: '',
-                                    previewImgUrl: '',
-                                }
-                            ],
-                            k_s: 's2' // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
-                        },
-                        {
-                            k: '功能', // skuKeyName：规格类目名称
-                            v: [
-                                {
-                                    id: '30399', // skuValueId：规格值 id
-                                    name: '单控', // skuValueName：规格值名称
-                                    imgUrl: '', // 规格类目图片，只有第一个规格类目可以定义图片
-                                    previewImgUrl: '', // 用于预览显示的规格类目图片
-                                },
-                                {
-                                    id: '1299',
-                                    name: '双控',
-                                    imgUrl: '',
-                                    previewImgUrl: '',
-                                }
-                            ],
-                            k_s: 's3' // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
-                        }
-                    ],
-                    // 所有 sku 的组合列表，比如红色、M 码为一个 sku 组合，红色、S 码为另一个组合
-                    list: [
-                        {
-                            id: 2259, // skuId，下单时后端需要
-                            price: 100, // 价格（单位分）
-                            s1: '30349', // 规格类目 k_s 为 s1 的对应规格值 id
-                            s2: '0', // 规格类目 k_s 为 s2 的对应规格值 id
-                            s3: '1299', // 最多包含3个规格值，为0表示不存在该规格
-                            stock_num: 110 // 当前 sku 组合对应的库存
-                        }
-                    ],
-                    price: '1.00', // 默认价格（单位元）
-                    stock_num: 227, // 商品总库存
-                    collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
-                    none_sku: false, // 是否无规格商品
-                    messages: [
-                        {
-                            // 商品留言
-                            datetime: '0', // 留言类型为 time 时，是否含日期。'1' 表示包含
-                            multiple: '0', // 留言类型为 text 时，是否多行文本。'1' 表示多行
-                            name: '留言', // 留言名称
-                            type: 'text', // 留言类型，可选: id_no（身份证）, text, tel, date, time, email
-                            required: '1', // 是否必填 '1' 表示必填
-                            placeholder: '' // 可选值，占位文本
-                        },
-                        {
-                            // 备注
-                            datetime: '0', // 留言类型为 time 时，是否含日期。'1' 表示包含
-                            multiple: '0', // 留言类型为 text 时，是否多行文本。'1' 表示多行
-                            name: '备注', // 留言名称
-                            type: 'tel', // 留言类型，可选: id_no（身份证）, text, tel, date, time, email
-                            required: '0', // 是否必填 '1' 表示必填
-                            placeholder: '' // 可选值，占位文本
-                        }
-                    ],
-                    hide_stock: false // 是否隐藏剩余库存
+                carOrderlist:{
+                    coffeelist:[],
+                    totalNum:'',
+                    totalPrice:0
                 },
                 goods: {
                     // 默认商品 sku 缩略图
@@ -189,18 +108,13 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
                 goodsId: 0,
                 quota: 0,
                 quotaUsed: 0,
-                showAddCartBtn: true
+                showAddCartBtn: true,
+                cartNum:0,
+                status:''
                 // classId:httpKit.urlParams().itmclaId
             };
         },
         methods: {
-            // onSearch(val) {
-            //     //Toast(val);
-            //     console.info(val);
-            //     this.page = 1;
-            //     this.keyword = val;
-            //     this.onLoad()
-            // },
             onLoad() {
                 // 异步更新数据
                 var self = this;
@@ -211,7 +125,7 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
                     "page":self.page
                 };
                 self.$toast.loading({ forbidClick: true, duration: 0});
-                httpKit.post("/product/list",listdata, httpKit.type.form).then(res=>{
+                httpKit.post("/coffee/list",listdata, httpKit.type.form).then(res=>{
                     self.$toast.clear();
                     self.sum = res.count;
                     self.count = _.ceil(res.count / self.limit);
@@ -220,7 +134,9 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
                     }else{
                         self.list = self.list.concat(res.data)
                     }
-                    self.page++;
+                    if(self.list.length>0){
+                        self.page++;
+                    }
                     self.$refs['pull'].closePullDown();
                 }).catch(err => {
                     self.$toast.clear();
@@ -235,20 +151,180 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
             onAddCartClicked(){
                 //console.info(this.$refs.getSku.getSkuData())
             },
-            addcart(val){
-                //debugger
-                this.show = true;
-                console.info(val)
+            addcart(item){
+                var i=-1;
+                this.carOrderlist.coffeelist.forEach((coffee,index)=>{
+                    if(item.coffeeId == coffee.coffeeId){
+                        i = index;
+                        return;
+                    }
+                });
+                if (i == -1) {
+                    item.num = 1;
+                    this.carOrderlist.coffeelist.push(item);
+                    item.coffeeprice = item.num * item.price;
+                } else {
+                    this.carOrderlist.coffeelist[i].num ++;
+                    this.carOrderlist.coffeelist[i].coffeeprice = this.carOrderlist.coffeelist[i].num*this.carOrderlist.coffeelist[i].price
+                }
+               //console.info(item)
+                this.cartNum = this.carOrderlist.coffeelist.length;
+                window.localStorage.setItem('cartLength', JSON.stringify(this.cartNum));
+                var data = {
+                    coffeeId: item.coffeeId,
+                    buyNum: 1,
+                }
+                this.$toast.loading({ forbidClick: true, duration: 0});
+                httpKit.post("/coffee/cart/add", data,httpKit.type.json).then(res => {
+                    console.info(res);
+                    this.$toast.clear();
+
+                }).catch(err => {
+                    console.info(err)
+                });
+
+
+            },
+            onSubmit(){
+                window.localStorage.setItem('cartData', JSON.stringify(this.carOrderlist));
+                window.location.href = "../gsubmit/gsubmit.html"
+            },
+            cart(){
+                var self = this;
+                var data={
+                    "limit":self.limit,
+                    "page":self.cartpage
+                }
+                httpKit.post("/coffee/cart/list", data,httpKit.type.formData).then(res => {
+                    console.info(res);
+                    self.carOrderlist.coffeelist = res.data;
+                    self.cartNum = self.carOrderlist.coffeelist.length;
+                    window.localStorage.setItem('cartLength', JSON.stringify(self.cartNum));
+
+                }).catch(err => {
+                    console.info(err)
+                });
             },
             gcart(){
-                window.location.href = "../gcart/gcart.html";
+                this.showcart = true;
+                this.cart();
+            },
+            closecart(){
+                this.showcart = false
+            },
+            changeNum(item){
+                console.info(item)
+               /* item.coffeeprice = item.num * item.price;
+                var sum = 0;
+                this.carOrderlist.coffeelist.forEach(item=>{
+                    sum += item.coffeeprice;
+                    this.carOrderlist.totalPrice = sum
+                });
+                if(item.num == 0){
+                    this.carOrderlist.coffeelist.splice(this.carOrderlist.foodlist.findIndex(coffee => item.coffeeId === coffee.coffeeId), 1);
+
+                }
+                this.content = this.carOrderlist.coffeelist.length
+                if(this.carOrderlist.coffeelist == 0){
+                    this.showcart = false
+                }*/
+
+                this.$toast.loading({forbidClick: true, duration: 0});
+
+                var data = {
+                    cartId: item.id,
+                    buynum:item.buynum
+                };
+                httpKit.post("/coffee/cart/modifyBuynum", data, httpKit.type.form).then(res => {
+                    this.$toast.clear();
+
+                }).catch(err => {
+                    this.$toast.clear();
+                    this.$toast.fail({
+                        message: err.message
+                    });
+                });
+            },
+            beforeClose(obj){
+                // console.info(obj.position);
+                switch (obj.position) {
+                    case 'left':
+                    case 'cell':
+                    case 'outside':
+                        obj.instance.close();
+                        break;
+                    case 'right':
+                        this.$dialog.confirm({
+                            message: '确定删除吗？',
+                        }).then(() => {
+                            this.$toast.loading({forbidClick: true, duration: 0});
+                            console.info(obj.instance.$attrs.goodid);
+                            var data = {
+                                cartId: obj.instance.$attrs.goodid
+                            };
+                            httpKit.post("/coffee/cart/del", data, httpKit.type.form).then(res => {
+                                this.$toast.clear();
+                                this.$toast("删除成功！");
+                                this.cart();
+
+                            }).catch(err => {
+                                this.$toast.clear();
+                                this.$toast.fail({
+                                    message: err.message
+                                });
+                            });
+                            obj.instance.close();
+                        });
+                        break;
+                }
+            },
+            gorder(){
+                window.location.href='../gcoffeeOrder/gcoffeeOrder.html'
+            },
+            gcoffee(){
+                window.location.href='../gcoffee/gcoffee.html'
             }
+        },
+        watch:{
+            'carOrderlist':{
+                handler:function(newValue,oldValue){
+                    console.log(newValue)
+                },
+                deep:true,
+            },
+        },
+        computed:{
+            totalMoney(){
+                var sum = 0;
+                this.carOrderlist.coffeelist.forEach(item=>{
+                    sum += item.buynum*item.price;
+                    this.carOrderlist.totalPrice = sum
+                });
+                return sum;
+            },
+        },
+        created:function () {
+            var self = this;
+            self.$toast.loading({forbidClick: true, duration: 0});
+            httpKit.post("/coffee/shop/ok").then(res => {
+                self.$toast.clear();
+                console.info(res.data);
+                self.status = res.data.status;
+            }).catch(err => {
+                self.$toast.clear();
+                self.$toast.fail({
+                    message: err.message
+                });
+            });
         },
         mounted(){
             this.$nextTick(function () {
                 var self = this;
-                // self.onLoad();
-
+                 self.onLoad();
+                 self.cart();
+                 if(httpKit.urlParams().showcart == '1'){
+                     self.showcart = true
+                 }
             });
         }
     });

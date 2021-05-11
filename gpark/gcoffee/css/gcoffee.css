@@ -18,6 +18,7 @@ body{
 }
 .lists{
     /*padding-top:50px;*/
+    padding-bottom:55px;
 }
 .lists ul .goodslists{
     display: flex;
@@ -86,8 +87,9 @@ body{
 
 
 .btnGroup{
-    width: 100px;
+    width: 136px;
     height:40px;
+    padding:2px 10px;
     border-radius:10px;
     background: #000;
     opacity: 0.6;
@@ -109,9 +111,120 @@ body{
     vertical-align: middle;
 }
 
+.cart-icon{
+    width: 30px;
+    height:25px;
+    text-align: center;
 
-
-
+}
+.cart-icon .van-icon{
+    vertical-align: middle;
+}
+.border-radius{
+    width: 40px;
+    height:40px;
+    border-radius:100%
+}
+.pddingTop{
+    padding-top:40px;
+    position: relative;
+    height:100%;
+    width: 100%;
+    left:0;
+    top:0;
+}
+.shopContent{
+    padding-bottom:50px;
+}
+.shopping{
+    text-align: center;
+    padding-top:99px;
+}
+.shopping img{
+    width:96px;
+    height:96px;
+    margin-bottom: 25px;
+}
+li {
+    background: #ffffff;
+    /* margin-bottom: 10px;*/
+    position: relative;
+}
+li .shopmain {
+    display: flex;
+    padding: 0 8px 0 15px;
+    position: relative;
+    border-bottom:1px solid #f7f7f7;
+}
+li .shopmain .van-checkbox{
+    width: 25px;
+    /* position: absolute;
+     top: 50%;
+     margin-top: -10px;
+     left:16px;*/
+}
+li .shops {
+    display: -webkit-box;
+    width:100%;
+    padding:10px 0;
+}
+.cyName{
+    padding:10px 15px;
+    border-bottom:1px solid #f7f7f7;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+}
+.cyName h3{
+    font-size:14px;
+    /*font-weight: normal;*/
+    margin:0 15px;
+}
+li .shopImg {
+    overflow: hidden;
+    width:80px;
+    height:80px;
+    margin-top:10px;
+}
+li img {
+    width: 100%;
+}
+.shopsright {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left:10px;
+    -webkit-box-flex:2;
+    -moz-box-flex: 2;
+    box-flex:2;
+}
+h4 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-weight: normal;
+    margin:5px 0;
+}
+.shoprightbot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.shoprightbot .coffee-price{
+    color:#F44336;
+}
+.shoprightbot s{
+    font-size:12px;
+    color:#999;
+}
+.van-checkbox__icon--checked .van-icon{
+    border-color: #F44336;
+    background-color: #F44336;
+}
+.van-submit-bar{
+    z-index:9999
+}
 
 
 
