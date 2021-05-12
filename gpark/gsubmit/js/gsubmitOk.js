@@ -2,12 +2,36 @@ require(['httpKit'], function (httpKit) {
     new Vue({
         el: '#gsubmitOk',
         template: `<div>
-                       <div class="empty">
+                       <div v-if="status==2" class="empty">
                             <van-icon class="success" color="#07c160" name="passed"/>
-                            <p>订单提交{{msg}}</p>
+                            <p>支付成功！</p> 
                             <div class="buttons">
-                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
                                 <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
+                            </div>
+                       </div>
+                       <div v-else-if="status==9" class="empty">
+                            <van-icon class="fail" name="close" color="#f00" />
+                            <p>支付超时！</p>
+                            <div class="buttons">
+                                <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
+                            </div>
+                       </div>
+                       <div v-else-if="status==3" class="empty">
+                            <van-icon class="fail" name="close" color="#f00" />
+                            <p>支付异常！</p>
+                            <div class="buttons">
+                                <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
+                            </div>
+                       </div>
+                       <div v-else class="empty">
+                            <van-loading size="80px" type="spinner" color="#006633" />
+                            <p>支付中。。。</p>
+                            <div class="buttons">
+                                <van-button plain type="primary" @click="goOrder" block>查看订单</van-button>
+                                <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
                             </div>
                        </div>
                        <div class="btnGroup">
@@ -28,34 +52,28 @@ require(['httpKit'], function (httpKit) {
                     `,
         data() {
             return {
-                payId: httpKit.urlParams().out_trade_no ? httpKit.urlParams().out_trade_no : '',
-                msg:'中......',
+                out_trade_no:'' ||  JSON.parse(localStorage.getItem('paycode')).out_trade_no,
+                status:1,
+                cartNum:JSON.parse(localStorage.getItem('cartLength'))
 
             };
         },
         methods: {
             getResult(){
                 var self = this;
-                    this.$toast.loading({forbidClick: true, duration: 0});
-                    var data = {
-                        out_trade_no: self.payId
-                    };
-                    httpKit.post("/coffee/pay/result", data, httpKit.type.form).then(res => {
-                        self.$toast.clear();
-                        if(res.data.paystatus=='2'){
-                            self.msg = '成功'
-                        }else if(res.data.paystatus=='' ||!res.data.paystatus){
-                            self.msg = '中......'
-                        }else{
-                            self.msg = '失败'
-                        }
-
-                    }).catch(err => {
-                        self.$toast.clear();
-                        self.$toast.fail({
-                            message: err.message
-                        });
+                self.$toast.loading({forbidClick: true, duration: 0});
+                var data = {
+                    out_trade_no: self.out_trade_no
+                };
+                httpKit.post("/coffee/pay/result", data, httpKit.type.form).then(res => {
+                    self.$toast.clear();
+                    self.status = res.data.paystatus * 1;
+                }).catch(err => {
+                    self.$toast.clear();
+                    self.$toast.fail({
+                        message: err.message
                     });
+                });
             },
             goShoping(){
                 window.location.href='../gcoffee/gcoffee.html'

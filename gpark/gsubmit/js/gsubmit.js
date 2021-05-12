@@ -1,4 +1,4 @@
-require(['httpKit','qs'], function (httpKit,qs) {
+require(['httpKit','lodash'], function (httpKit,_) {
     new Vue({
         el: '#gsubmit',
         template: `<div>
@@ -28,16 +28,15 @@ require(['httpKit','qs'], function (httpKit,qs) {
                                     <van-radio  checked-color="#009e86" name="2" />
                                   </template>
                                 </van-cell>
-                                
                               </van-cell-group>
                         </van-radio-group>
-                         <h2 class="van-doc-demo-block__title">送达时间</h2>
-                        <van-field  readonly v-model="ydtime" name="送达时间" label="送达时间" @click="getTime"/>
+                        <h2 class="van-doc-demo-block__title">送达时间</h2>
+                        <van-field v-if="iswork==false || showtime==false" disabled readonly name="送达时间" label="送达时间" @click="getTime"/>
+                        <van-field v-else readonly  v-model="ydtime" name="送达时间" label="送达时间" @click="getTime"/>
                         <!--时间选择-->
                         <van-popup v-model="showtime" position="bottom">
                             <van-datetime-picker type="datetime" v-model="currentDate" :filter="filter" :columns-order="['year', 'month', 'day','hour','minute']" :formatter="formatter" title="选择日期" :max-date="maxdate" :min-date="mindate"  @confirm="onConfirmdate" @cancel="showtime=false"/>
                         </van-popup> 
-                       
                         <div class="pddingTop">
                             <div class="shopContent">
                                 <ul>
@@ -45,7 +44,7 @@ require(['httpKit','qs'], function (httpKit,qs) {
                                         <div>
                                             <van-card
                                               :num="data.buynum"
-                                              :price="data.price*1.00"
+                                              :price=" _.round(data.price, 2)"
                                               :origin-price="data.originalPrice*1.00"
                                               :title="data.name"
                                               :thumb="data.ossurl"
@@ -158,8 +157,8 @@ require(['httpKit','qs'], function (httpKit,qs) {
                 showtime:false,
                 note:'',
                 reason:'',
-                ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+10))}`,
-                mindate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+20),
+                ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+30))}`,
+                mindate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+30),
                 //maxdate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+1, new Date().getHours(), new Date().getMinutes()),
                 maxdate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 20, 0),
                 //maxdate:'',
@@ -205,14 +204,10 @@ require(['httpKit','qs'], function (httpKit,qs) {
                    // console.info('h:'+h)
                     return h;
                 }
-
                 return options;
             },
             getTime(){
                 this.showtime = true;
-                if(this.maxdate==''){
-                    this.maxdate = new Date(2021,4,6,20,0)
-                }
             },
             onConfirmdate(val){
                 console.info(val);
@@ -224,7 +219,6 @@ require(['httpKit','qs'], function (httpKit,qs) {
                     this.editAddr = true;
                 }else{
                     this.showList = true;
-
                 }
             },
             addressList(){
@@ -501,9 +495,6 @@ require(['httpKit','qs'], function (httpKit,qs) {
             goShoping(){
                 window.history.back(-1)
             },
-            goOrder(){
-
-            },
             getiswork(){
                 httpKit.post("/coffee/iswork").then(res => {
                     this.$toast.clear();
@@ -533,12 +524,10 @@ require(['httpKit','qs'], function (httpKit,qs) {
         },
         created: function(){
             var self = this;
-
             self.$toast.loading({forbidClick: true, duration: 0});
             httpKit.post("/coffee/order/onAccount").then(res => {
                 self.$toast.clear();
                 console.info(res.data);
-
                 self.sprcolumns = res.data.sprList.map(item=>{
                     return{
                         'id':item.ygbm,
@@ -568,6 +557,9 @@ require(['httpKit','qs'], function (httpKit,qs) {
         },
         mounted(){
             var self = this;
+            self.filter('formatterPrice', function (value) {
+                _.floor(value, 2);
+            });
             self.addressList();
             self.getiswork()
         }

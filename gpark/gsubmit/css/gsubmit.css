@@ -154,6 +154,7 @@ li .shops {
 /* gsubmitOk */
 .buttons {
     padding: 0px 32px 16px 32px;
+    margin-top: 50px;
 }
 
 .buttons button {
@@ -190,4 +191,7 @@ li .shops {
     font-size:30px;
     color:#fff;
     vertical-align: middle;
+}
+.clickRefresh{
+    font-size:14px;
 }
