@@ -7,8 +7,8 @@ require(['httpKit','PullUpDown','backTop','lodash'], function (httpKit,PullUpDow
             'back-top':backTop
         },
         template: `<div>
-                       <van-divider v-show="status=='2'" :style="{ borderColor: '#fff', padding: '0 5px',color:'#999',margin:'5px 0' }">营业时间：8:00-20:00</van-divider>
-                       <van-divider v-show="status=='1'" :style="{ borderColor: '#fff', padding: '0 5px',color:'#999',margin:'5px 0' }">店面休息,暂不支持线上下单</van-divider>
+                       <van-divider v-show="status=='2'" :style="{ borderColor: '#fff', padding: '0 5px',color:'#999',margin:'5px 0' }">营业时间：9:00-20:00</van-divider>
+                       <van-divider v-show="status=='1'" :style="{ borderColor: '#fff', padding: '0 5px',color:'#f00',margin:'5px 0' }">店面休息,暂不支持线上下单</van-divider>
                         <div class="lists">
                              <ul class="pull">
                                  <pull-up-down class="goodslists" ref="pull" :pullDown="false" :currentPage="page" :count="count" :sum="sum" @nextPage="onLoad()">
