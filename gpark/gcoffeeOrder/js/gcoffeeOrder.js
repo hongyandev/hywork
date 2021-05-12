@@ -10,8 +10,19 @@ require(['PullUpDown','httpKit'],function (PullUpDown,httpKit) {
                                 <ul>
                                     <li v-for="(data,i) in dataList" :key="i">
                                         <div class="order-top">
-                                               <time>{{data.credat}}</time> 
-                                               <span>{{data.paytype == '1' ? '支付宝' : '挂账'}}</span>
+                                            <div>
+                                                <time>{{data.credat}}</time>
+                                            </div>
+                                            <div style="text-align: center">
+                                                <span>{{data.paytype == '1' ? '支付宝' : '挂账'}}</span>
+                                                <div>
+                                                    <span class="success" v-show="data.paytype=='1' && data.paystatus=='2'">已付款</span>
+                                                    <span v-show="data.paytype=='2' && data.status=='1'">等待审批</span>
+                                                    <span v-show="data.paytype=='2' && data.status=='2'">审批已通过</span>
+                                                    <span v-show="data.paytype=='2' && data.status=='3'">订单已取消</span>
+                                                    <span v-show="data.paytype=='1' && data.paystatus=='9'">订单超时关闭</span>
+                                                </div>
+                                            </div>      
                                         </div>
                                         <div v-for="(order,index) in data.details">
                                             <van-card 
@@ -29,13 +40,9 @@ require(['PullUpDown','httpKit'],function (PullUpDown,httpKit) {
                                             </div>
                                             <div class="btns">
                                                 <van-button @click="gpay(data.code)" v-show="data.paytype=='1' && (data.paystatus=='1'||data.paystatus=='3')" round type="danger" size="small">去付款</van-button>
-                                                <van-button v-show="data.paytype=='1' && data.paystatus=='2'" round type="default" size="small">已付款</van-button>
-                                                <van-button v-show="data.paytype=='2' && data.status=='1'" round type="default" size="small">等待审批</van-button>
-                                                <van-button v-show="data.paytype=='2' && data.status=='2'" round type="default" size="small">审批已通过</van-button>
-                                                <van-button v-show="data.paytype=='2' && data.status=='3'" round type="default" size="small">订单已取消</van-button>
-                                                <van-button v-show="data.paytype=='1' && data.status=='9'" round type="default" size="small">订单超时关闭</van-button>
-                                                <!--<van-button round type="primary"  size="small">确认收货</van-button>
-                                                <van-button round type="default"  size="small">申请退款</van-button>-->
+                                                <van-button @click="grefund(data.code)" v-show="data.paytype=='1' && data.paystatus=='2'" round type="default" size="small">申请退款</van-button>
+                                                <van-button  round type="default" size="small">删除订单</van-button>
+                                             
                                             </div>
                                         </div>
                                     </li>
@@ -73,7 +80,7 @@ require(['PullUpDown','httpKit'],function (PullUpDown,httpKit) {
             methods: {
                 getorder (){
                     var self = this;
-                    this.$toast.loading({forbidClick: true, duration: 0});
+                    self.$toast.loading({forbidClick: true, duration: 0});
                     var data={
                         "limit":self.limit,
                         "page":self.page
@@ -91,6 +98,8 @@ require(['PullUpDown','httpKit'],function (PullUpDown,httpKit) {
                         if(self.dataList.length>0){
                             self.page++;
                         }
+                        if (self.dataList && self.dataList.length > 0 && self.$refs['pull'])
+                            self.$refs['pull'].closePullDown();
                     }).catch(err => {
                         self.$toast.clear();
                         self.$toast.fail({
@@ -102,6 +111,7 @@ require(['PullUpDown','httpKit'],function (PullUpDown,httpKit) {
                     var data = {
                         out_trade_no: code,
                     };
+                    this.$toast.loading({forbidClick: true, duration: 0});
                     httpKit.post("/coffee/order/pay", data ,httpKit.type.formData).then(res => {
                         this.$toast.clear();
                         console.info(res.data);
@@ -109,6 +119,23 @@ require(['PullUpDown','httpKit'],function (PullUpDown,httpKit) {
                             window.localStorage.setItem('paydata', JSON.stringify(res.data));
                             window.location.href='../gsubmit/gsubmitResult.html';
                         }
+
+                    }).catch(err => {
+                        this.$toast.clear();
+                        this.$toast.fail({
+                            message: err.message
+                        });
+                    });
+                },
+                grefund(code){
+                    var data = {
+                        out_trade_no: code,
+                    };
+                    this.$toast.loading({forbidClick: true, duration: 0});
+                    httpKit.post("/coffee/reqeust/refund", data ,httpKit.type.formData).then(res => {
+                        this.$toast.clear();
+                        console.info(res.data);
+
 
                     }).catch(err => {
                         this.$toast.clear();
