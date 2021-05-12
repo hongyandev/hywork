@@ -31,7 +31,7 @@ require(['httpKit','lodash'], function (httpKit,_) {
                               </van-cell-group>
                         </van-radio-group>
                         <h2 class="van-doc-demo-block__title">送达时间</h2>
-                        <van-field v-if="iswork==false || showtime==false" disabled readonly name="送达时间" label="送达时间" @click="getTime"/>
+                        <van-field v-if="iswork==false" disabled readonly name="送达时间" label="送达时间" @click="getTime"/>
                         <van-field v-else readonly  v-model="ydtime" name="送达时间" label="送达时间" @click="getTime"/>
                         <!--时间选择-->
                         <van-popup v-model="showtime" position="bottom">
