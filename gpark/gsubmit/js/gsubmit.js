@@ -30,12 +30,15 @@ require(['httpKit','lodash'], function (httpKit,_) {
                                 </van-cell>
                               </van-cell-group>
                         </van-radio-group>
-                        <h2 class="van-doc-demo-block__title">送达时间</h2>
-                        <van-field v-if="iswork==false" disabled readonly name="送达时间" label="送达时间" @click="getTime"/>
-                        <van-field v-else readonly  v-model="ydtime" name="送达时间" label="送达时间" @click="getTime"/>
+                        <h2 class="van-doc-demo-block__title">选择时间</h2>
+                        <van-field v-if="iswork==false" disabled readonly name="选择时间" label="选择时间" @click="getTime"/>
+                        <van-field v-else readonly v-model="ydtime.id=='2'? ydtime.time : ydtime.text" name="选择时间" label="选择时间" @click="getTime"/>
                         <!--时间选择-->
-                        <van-popup v-model="showtime" position="bottom">
-                            <van-datetime-picker type="datetime" v-model="currentDate" :filter="filter" :columns-order="['year', 'month', 'day','hour','minute']" :formatter="formatter" title="选择日期" :max-date="maxdate" :min-date="mindate"  @confirm="onConfirmdate" @cancel="showtime=false"/>
+                        <van-popup :close-on-click-overlay="false" v-model="showsdtime" position="bottom">
+                          <van-picker v-model="showsdtime" title="选择送达时间" show-toolbar :columns="arrcolumns" @confirm="onConfirmsdTime" @cancel="onCancelsdTime" @change="onChange"/>
+                        </van-popup>
+                        <van-popup :close-on-click-overlay="false" v-model="showtime" position="bottom">
+                            <van-datetime-picker type="datetime" v-model="currentDate" :filter="filter" :columns-order="['year', 'month', 'day','hour','minute']" :formatter="formatter" title="选择日期" :max-date="maxdate" :min-date="mindate"  @confirm="onConfirmdate" @cancel="canceldate"/>
                         </van-popup> 
                         <div class="pddingTop">
                             <div class="shopContent">
@@ -78,9 +81,8 @@ require(['httpKit','lodash'], function (httpKit,_) {
                             <div style="margin:15px">
                               <van-button color="#07c160" round block type="primary" @click="gzsubmitInfo">
                                 确定
-                                </van-button>
+                              </van-button>
                             </div>
-                            
                         </van-popup>
                          <!--审批人选择-->
                          <van-popup v-model="showsprPicker" round position="bottom">
@@ -125,7 +127,6 @@ require(['httpKit','lodash'], function (httpKit,_) {
                                 <van-button  type="primary" @click="goShoping" block>继续购物</van-button>
                                 <!--<van-button plain type="primary" @click="goOrder" block>查看订单</van-button>-->
                             </div>
-                         
                        </div>
                          </div>
                        </van-popup>
@@ -157,14 +158,32 @@ require(['httpKit','lodash'], function (httpKit,_) {
                 showtime:false,
                 note:'',
                 reason:'',
-                ydtime:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+30))}`,
-                mindate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+30),
+                ydtime:{
+                    text:'下单即送',
+                    id:'1',
+                    time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+3))}`
+                },
+                arrtime:'',
+                mindate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+3),
                 //maxdate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()+1, new Date().getHours(), new Date().getMinutes()),
                 maxdate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 20, 0),
-                //maxdate:'',
-                currentDate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours()+1, new Date().getMinutes()),
+                //maxdate:''
+                currentDate:new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+3),
                 showok:false,
                 iswork:true,
+                arrcolumns:[
+                    {
+                        text:'下单即送',
+                        id:'1',
+                        time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+2))}`
+                    },
+                    {
+                        text:'预约时间',
+                        id:'2',
+                        time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+2))}`
+                    },
+                ],
+                showsdtime:false
             };
         },
         methods: {
@@ -204,14 +223,37 @@ require(['httpKit','lodash'], function (httpKit,_) {
                    // console.info('h:'+h)
                     return h;
                 }
+               // console.info(options)
                 return options;
             },
             getTime(){
-                this.showtime = true;
+                this.showsdtime = true;
             },
+            onConfirmsdTime(data){
+                console.info(data);
+                this.ydtime = data;
+                this.ydtime.time = data.time ? data.time:"";
+                if(this.ydtime.id=='2'){
+                    this.showsdtime = false;
+                    this.showtime = true
+                }else{
+                    this.showsdtime = false;
+                }
+            },
+            onCancelsdTime(){
+                this.showsdtime = false;
+            },
+            onChange(){},
             onConfirmdate(val){
                 console.info(val);
-                this.ydtime = this.formatDate(val);
+                this.ydtime.time = this.formatDate(val);
+                this.showtime = false;
+            },
+            canceldate(){
+                /*if(this.ydtime.time){
+                    this.$toast("请选择时间");
+                    return false;
+                }*/
                 this.showtime = false;
             },
             showaddressList(){
@@ -444,11 +486,11 @@ require(['httpKit','lodash'], function (httpKit,_) {
                     createrYsbm:this.createrBmbm.ysbm,
                     paytype:this.radio,
                     reason:this.reason,
-                    reservedate:this.ydtime,
+                    reservedate:this.ydtime.time,
                     details:this.dataList.coffeelist//订单明细
                 };
+                /*console.info(orderdata)*/
                 this.$toast.loading({ forbidClick: true, duration: 0});
-
                 httpKit.post('/coffee/order/add', orderdata).then(res=>{
                     this.$toast.clear();
                     window.localStorage.clear();
