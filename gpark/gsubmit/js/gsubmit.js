@@ -75,7 +75,7 @@ require(['httpKit','lodash'], function (httpKit,_) {
                             <van-divider :style="{ borderColor: '#fff', padding: '0 16px',color:'#333' }">选择审批信息</van-divider>
                             <van-form style="border-bottom:1px solid #f7f7f7">
                                 <van-field required readonly clickable name="bm" label="选择部门" :value="createrBmbm.text" placeholder="请选择"  @click="showbm"/>
-                                <van-field required readonly clickable  name="spr" label="选择审批人" :value="spr.text" placeholder="请选择" @click="showspr" />
+                                <van-field required readonly clickable  name="spr" label="选择审批人" :value="createrBmbm.spr" placeholder="请选择" />
                                 <van-field required v-model="reason" rows="1" autosize label="事由" type="textarea" maxlength="50" placeholder="请输入事由" show-word-limit/>
                             </van-form>
                             <div style="margin:15px">
@@ -85,9 +85,9 @@ require(['httpKit','lodash'], function (httpKit,_) {
                             </div>
                         </van-popup>
                          <!--审批人选择-->
-                         <van-popup v-model="showsprPicker" round position="bottom">
-                            <van-picker show-toolbar :columns="sprcolumns" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>
-                        </van-popup>
+                         <!--<van-popup v-model="showsprPicker" round position="bottom">-->
+                            <!--<van-picker show-toolbar :columns="sprcolumns" @cancel="showsprPicker = false" @confirm="onsprConfirm"/>-->
+                        <!--</van-popup>-->
                         <!--部门选择-->
                         <van-popup v-model="showbmPicker" round position="bottom">
                             <van-picker show-toolbar :columns="bmcolumns" @cancel="showbmPicker = false" @confirm="onbmConfirm"/>
@@ -139,12 +139,12 @@ require(['httpKit','lodash'], function (httpKit,_) {
                 showgzPicker:false,
                 showList:false,
                 fktypepicker:false,
-                showsprPicker:false,
+                // showsprPicker:false,
                 showbmPicker:false,
-                sprcolumns:[],
+                // sprcolumns:[],
                 bmcolumns:[],
                 createrBmbm:{},
-                spr:{},
+                // spr:{},
                 chosenAddressId: '',
                 address:{},
                 addressInfo:{},
@@ -315,24 +315,24 @@ require(['httpKit','lodash'], function (httpKit,_) {
             showbm(){
                 this.showbmPicker = true;
             },
-            showspr(){
-                this.showsprPicker = true;
-            },
+            // showspr(){
+            //     this.showsprPicker = true;
+            // },
             onbmConfirm(item){
                 var self = this;
                 self.showbmPicker = false;
                 self.createrBmbm = item;
             },
-            onsprConfirm(item){
-                this.spr = item;
-                this.showsprPicker = false
-            },
+            // onsprConfirm(item){
+            //     this.spr = item;
+            //     this.showsprPicker = false
+            // },
             gzsubmitInfo(){
                 if(!this.createrBmbm.ysbm){
                     this.$toast('请选择部门');
                     return false;
                 }
-                if(!this.spr.id){
+                if(!this.createrBmbm.sprId){
                     this.$toast('请选择审批人');
                     return false;
                 }
@@ -480,7 +480,7 @@ require(['httpKit','lodash'], function (httpKit,_) {
                     address:this.address.address,
                     contact:this.address.name,
                     tel:this.address.tel,
-                    approver:this.spr.id,
+                    approver:this.createrBmbm.sprId,
                     createrBmbm:this.createrBmbm.id,
                     createrTjgs:this.createrBmbm.tjgs,
                     createrYsbm:this.createrBmbm.ysbm,
@@ -570,7 +570,7 @@ require(['httpKit','lodash'], function (httpKit,_) {
             httpKit.post("/coffee/order/onAccount").then(res => {
                 self.$toast.clear();
                 console.info(res.data);
-                self.sprcolumns = res.data.sprList.map(item=>{
+                /*self.sprcolumns = res.data.sprList.map(item=>{
                     return{
                         'id':item.ygbm,
                         'text':item.ygxm,
@@ -578,13 +578,15 @@ require(['httpKit','lodash'], function (httpKit,_) {
                     }
                 });
 
-                self.spr = self.sprcolumns.filter(item=>item.mr=='1').map(item=>{return item})[0];
+                self.spr = self.sprcolumns.filter(item=>item.mr=='1').map(item=>{return item})[0];*/
                 self.bmcolumns = res.data.bmList.map(item=>{
                     return{
                         'id':item.bmbm,
                         'text':item.bmmc,
                         'ysbm':item.ysbm,
-                        'tjgs':item.tjgs
+                        'tjgs':item.tjgs,
+                        'spr':item.sprMap.ygxm,
+                        'sprId':item.sprMap.bmjl
                     }
                 });
                 self.createrBmbm = self.bmcolumns[0];
