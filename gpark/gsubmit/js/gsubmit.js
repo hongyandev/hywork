@@ -175,12 +175,12 @@ require(['httpKit','lodash'], function (httpKit,_) {
                     {
                         text:'下单即送',
                         id:'1',
-                        time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+2))}`
+                        time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+5))}`
                     },
                     {
                         text:'预约时间',
                         id:'2',
-                        time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+2))}`
+                        time:`${this.formatDate(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), new Date().getHours(), new Date().getMinutes()+5))}`
                     },
                 ],
                 showsdtime:false
